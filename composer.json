@@ -1,0 +1,30 @@
+{
+    "name": "codesaur/template",
+    "description": "An elegant object-oriented application development framework component for PHP 7.2 or newer",
+    "keywords": [
+        "template", "php template",
+        "mongol", "mongolia", "mongolian", "монгол",
+        "codesaur", "narankhuu", "coden", "кодзавр", "наранхүү"," коден",
+        "ololt", "ололт", "мөнхийн", "мөнхийн-ололт", "мөнхийн ололт", "munkhiin ololt"
+    ],
+    "homepage": "https://ololt.mn/codesaur",
+    "authors": [
+        {
+            "name": "Narankhuu",
+            "email": "codesaur@gmail.com",
+            "homepage": "https://ololt.mn/narankhuu"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "twig/twig": ">=3.2.1",
+        "codesaur/http-message": ">=1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "codesaur\\Template\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "minimum-stability": "dev"
+}
