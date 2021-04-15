@@ -74,7 +74,7 @@ class MemoryTemplate
     protected function compile(string $html): string
     {
         foreach ($this->getVars() as $key => $value) {
-            $tagToReplace = "{@$key}";
+            $tagToReplace = "{{ $key }}";
             $html = str_replace($tagToReplace, isset($value) ? $this->stringify($value) : '', $html);
         }
         
