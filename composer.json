@@ -16,7 +16,6 @@
         }
     ],
     "require": {
-        "php": ">=7.2.0",
         "twig/twig": ">=3.2.1",
         "codesaur/http-message": ">=1.0"
     },

@@ -36,11 +36,11 @@ class FileTemplate extends MemoryTemplate
     public function getFileSource(): string
     {
         if (empty($this->getFileName())) {
-            return 'Error settings of Template.';
+            return 'Error settings of Template';
         }
 
         if (!file_exists($this->getFileName())) {
-            $error = "Error loading template file ({$this->getFileName()}).";
+            $error = "Error loading template file ({$this->getFileName()})";
 
             error_log($error);
 
