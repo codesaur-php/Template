@@ -1,5 +1,7 @@
 <?php
 
+namespace codesaur\Router\Example;
+
 /* DEV: v1.2021.03.04
  * 
  * This is an example script!
