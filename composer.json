@@ -16,6 +16,7 @@
         }
     ],
     "require": {
+        "ext-json": "*",
         "twig/twig": ">=3.2.1",
         "codesaur/http-message": ">=1.0"
     },
