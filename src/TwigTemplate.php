@@ -2,7 +2,6 @@
 
 namespace codesaur\Template;
 
-use Twig\Markup;
 use Twig\TwigFilter;
 use Twig\Environment;
 use Twig\TwigFunction;
@@ -26,28 +25,6 @@ class TwigTemplate extends FileTemplate
         $this->addFilter(new TwigFilter('json_decode', function ($data, $param = true)
         {
             return json_decode($data, $param);
-        }));
- 
-        $this->addFunction(new TwigFunction('script', function ($src, $attr = 'defer')
-        {
-            $script = '<script';
-            if (!empty($attr)) {
-                $script .= " $attr";
-            }
-            $script .= ' src="' . $src . '"></script>';
-            
-            return new Markup($script, 'UTF-8');
-        }));
-        
-        $this->addFunction(new TwigFunction('stylesheet', function ($href, $attr = null)
-        {
-            $link = '<link href="' . $href . '" rel="stylesheet" type="text/css"';
-            if (!empty($attr)) {
-                $link .= " $attr";
-            }
-            $link .= '>';
-            
-            return new Markup($link, 'UTF-8');
         }));
     }
     
