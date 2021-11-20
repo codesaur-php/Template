@@ -41,8 +41,12 @@ class FileTemplate extends MemoryTemplate
 
         if (!file_exists($this->getFileName())) {
             $error = "Error loading template file ({$this->getFileName()})";
-
-            error_log($error);
+            
+            if (defined('CODESAUR_DEVELOPMENT')
+                    && CODESAUR_DEVELOPMENT
+            ) {
+                error_log($error);
+            }
 
             return $error;
         }

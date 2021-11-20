@@ -55,7 +55,7 @@ class MemoryTemplate
                 && CODESAUR_DEVELOPMENT
         ) {
             error_log("TEMPLATE KEY NOT DEFINED: $key");
-        }        
+        }
         
         $nulldata = null;
         return $nulldata;
