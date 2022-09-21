@@ -20,7 +20,7 @@ class FileTemplate extends MemoryTemplate
     public function file(string $filepath)
     {
         if (empty($filepath)
-                || \ctype_space($filepath)
+            || \ctype_space($filepath)
         ) {
             return;
         }

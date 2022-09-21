@@ -12,8 +12,8 @@ require_once '../vendor/autoload.php';
 use codesaur\Template\TwigTemplate;
 
 $template = new TwigTemplate(
-        dirname(__FILE__) . '/asperion.html',
-        array('menu' => array('Home', 'About', 'Technologies', 'Projects', 'Contacts', 'Custom'))
+    dirname(__FILE__) . '/asperion.html',
+    array('menu' => array('Home', 'About', 'Technologies', 'Projects', 'Contacts', 'Custom'))
 );
 $template->set('partners', array(
     'Google logo' => 'https://i.imgur.com/oSriTuP.png',
