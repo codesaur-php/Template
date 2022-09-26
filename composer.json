@@ -18,7 +18,7 @@
     "require": {
         "ext-json": "*",
         "twig/twig": ">=3.2.1",
-        "codesaur/http-message": ">=1.4.2"
+        "codesaur/http-message": ">=1.4.3"
     },
     "autoload": {
         "psr-4": {
