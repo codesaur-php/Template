@@ -28,7 +28,7 @@ To learn about HTML5, CSS3 and Javascript visit http://alexsblog.org
                     <h1><a href="index.php">Asperion</a></h1>
                     <ul class="nav-ul">
                         {% for item in menu %}
-                        <li><a href="?item={{ item }}">{{ item }}</a></li>
+                            <li><a href="?item={{ item }}">{{ item }}</a></li>
                         {% endfor %}
                     </ul>
                 </nav>
@@ -147,11 +147,11 @@ To learn about HTML5, CSS3 and Javascript visit http://alexsblog.org
                     <hr />
                     <h1>Our Partners</h1>
                     <div class="row">
-                    {% for name,logo in partners %}
-                        <div class="logo-container">
-                            <img src="{{ logo }}" alt="{{ name }}" />
-                        </div>
-                    {% endfor %}
+                        {% for name,logo in partners %}
+                            <div class="logo-container">
+                                <img src="{{ logo }}" alt="{{ name }}" />
+                            </div>
+                        {% endfor %}
                     </div>
                 </section>
             </main>
@@ -160,7 +160,7 @@ To learn about HTML5, CSS3 and Javascript visit http://alexsblog.org
             <nav role="navigation">
                 <ul class="nav-ul">
                     {% for item in menu %}
-                    <li><a href="?item={{ item }}">{{ item }}</a></li>
+                        <li><a href="?item={{ item }}">{{ item }}</a></li>
                     {% endfor %}
                 </ul>
             </nav>

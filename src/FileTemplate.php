@@ -6,15 +6,13 @@ use codesaur\Http\Message\OutputBuffer;
 
 class FileTemplate extends MemoryTemplate
 {
-    protected $_file = null;
+    protected string $_file = '';
 
-    function __construct(?string $template = null, ?array $vars = null)
+    function __construct(string $template = '', array $vars = [])
     {
-        parent::__construct(null, $vars);
+        parent::__construct('', $vars);
         
-        if (isset($template)) {
-            $this->file($template);
-        }
+        $this->file($template);
     }
 
     public function file(string $filepath)
@@ -28,19 +26,20 @@ class FileTemplate extends MemoryTemplate
         $this->_file = $filepath;
     }
     
-    public function getFileName(): ?string
+    public function getFileName(): string
     {
         return $this->_file;
     }
 
     public function getFileSource(): string
     {
-        if (empty($this->getFileName())) {
+        $fileName = $this->getFileName();
+        if (empty($fileName)) {
             return 'Error settings of Template';
         }
 
-        if (!file_exists($this->getFileName())) {
-            $error = "Error loading template file ({$this->getFileName()})";
+        if (!file_exists($fileName)) {
+            $error = "Error loading template file ($fileName)";
             
             if (defined('CODESAUR_DEVELOPMENT')
                     && CODESAUR_DEVELOPMENT
@@ -54,13 +53,13 @@ class FileTemplate extends MemoryTemplate
         $buffer = new OutputBuffer();
         $buffer->start();
 
-        include($this->getFileName());
+        include($fileName);
 
         $fileSource = $buffer->getContents();
 
         $buffer->endClean();
         
-        return (string)$fileSource;
+        return (string) $fileSource;
     }
 
     public function output(): string

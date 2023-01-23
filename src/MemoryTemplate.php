@@ -4,18 +4,13 @@ namespace codesaur\Template;
 
 class MemoryTemplate
 {
-    protected $_html = '';
-    protected $_vars = array();
+    protected string $_html;
+    protected array $_vars;
     
-    function __construct(?string $template = null, ?array $vars = null)
+    function __construct(string $template = '', array $vars = [])
     {
-        if (isset($template)) {
-            $this->source($template);
-        }
-
-        if (isset($vars)) {
-            $this->setVars($vars);
-        }
+        $this->_html = $template;
+        $this->_vars = $vars;
     }
     
     final public function __toString()
@@ -23,12 +18,12 @@ class MemoryTemplate
         return $this->output();
     }
 
-    public function source($html)
+    public function source(string $html)
     {
-        $this->_html = (string) $html;
+        $this->_html = $html;
     }
 
-    final public function has(string $key)
+    final public function has(string $key): bool
     {
         return isset($this->getVars()[$key]);
     }
@@ -66,7 +61,7 @@ class MemoryTemplate
         return $this->_vars;
     }
 
-    public function getSource()
+    public function getSource(): string
     {
         return $this->_html;
     }
@@ -75,7 +70,7 @@ class MemoryTemplate
     {
         foreach ($this->getVars() as $key => $value) {
             $tagToReplace = "{{ $key }}";
-            $html = str_replace($tagToReplace, isset($value) ? $this->stringify($value) : '', $html);
+            $html = str_replace($tagToReplace, $this->stringify($value), $html);
         }
         
         return $html;
@@ -100,7 +95,7 @@ class MemoryTemplate
             }
             return $text;
         } else {
-            return (string)$content;
+            return (string) $content;
         }
     }
 }

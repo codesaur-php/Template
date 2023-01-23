@@ -9,22 +9,22 @@ use Twig\Loader\ArrayLoader;
 
 class TwigTemplate extends FileTemplate
 {
-    protected $_environment;
+    protected Environment $_environment;
     
-    function __construct(string $template = null, array $vars = null)
+    function __construct(string $template = '', array $vars = [])
     {
         parent::__construct($template, $vars);
         
-        $this->_environment = new Environment(new ArrayLoader(), array('autoescape' => false));
+        $this->_environment = new Environment(new ArrayLoader(), ['autoescape' => false]);
         
         $this->addFilter(new TwigFilter('int', function ($variable)
         {
             return intval($variable);
         }));
         
-        $this->addFilter(new TwigFilter('json_decode', function ($data, $param = true)
+        $this->addFilter(new TwigFilter('json_decode', function (string $data, $associative = true)
         {
-            return json_decode($data, $param);
+            return json_decode($data, $associative);
         }));
     }
     
