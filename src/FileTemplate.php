@@ -31,32 +31,26 @@ class FileTemplate extends MemoryTemplate
 
     public function getFileSource(): string
     {
-        $fileName = $this->getFileName();
-        if (empty($fileName)) {
-            return 'Error settings of Template';
-        }
+        try {
+            $fileName = $this->getFileName();
+            if (empty($fileName)) {
+                throw new \Exception('Error settings of ' . __CLASS__);
+            }
 
-        if (!file_exists($fileName)) {
-            $error = "Error loading template file ($fileName)";
-            
+            if (!file_exists($fileName)) {
+                throw new \Exception("Error loading template file [$fileName]");
+            }
+
+            return file_get_contents($fileName) ?: '';
+        } catch (\Throwable $th) {
             if (defined('CODESAUR_DEVELOPMENT')
                     && CODESAUR_DEVELOPMENT
             ) {
-                error_log($error);
+                error_log($th->getMessage());
             }
-
-            return $error;
+            
+            return $th->getMessage();
         }
-
-        if (ob_start()) {
-            include($fileName);
-            $fileSource = ob_get_contents();
-            ob_end_clean();
-        } else {
-            $fileSource = file_get_contents($fileName);
-        }
-        
-        return $fileSource ?: '';
     }
 
     public function output(): string
