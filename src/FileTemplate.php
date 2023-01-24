@@ -2,8 +2,6 @@
 
 namespace codesaur\Template;
 
-use codesaur\Http\Message\OutputBuffer;
-
 class FileTemplate extends MemoryTemplate
 {
     protected string $_file = '';
@@ -50,16 +48,15 @@ class FileTemplate extends MemoryTemplate
             return $error;
         }
 
-        $buffer = new OutputBuffer();
-        $buffer->start();
-
-        include($fileName);
-
-        $fileSource = $buffer->getContents();
-
-        $buffer->endClean();
+        if (ob_start()) {
+            include($fileName);
+            $fileSource = ob_get_contents();
+            ob_end_clean();
+        } else {
+            $fileSource = file_get_contents($fileName);
+        }
         
-        return (string) $fileSource;
+        return $fileSource ?: '';
     }
 
     public function output(): string
