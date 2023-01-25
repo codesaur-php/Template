@@ -5,6 +5,7 @@ namespace codesaur\Template;
 class MemoryTemplate
 {
     protected string $_html;
+    
     protected array $_vars;
     
     function __construct(string $template = '', array $vars = [])
@@ -47,7 +48,7 @@ class MemoryTemplate
         }
         
         if (defined('CODESAUR_DEVELOPMENT')
-            && CODESAUR_DEVELOPMENT
+                && CODESAUR_DEVELOPMENT
         ) {
             error_log("TEMPLATE KEY NOT DEFINED: $key");
         }
