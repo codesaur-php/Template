@@ -15,10 +15,8 @@ class FileTemplate extends MemoryTemplate
 
     public function file(string $filepath)
     {
-        if (empty($filepath)
-            || \ctype_space($filepath)
-        ) {
-            return;
+        if (empty($filepath)) {
+            throw new \InvalidArgumentException(__CLASS__ . ': Must provide filename');
         }
         
         $this->_file = $filepath;
