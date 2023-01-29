@@ -6,7 +6,7 @@ class FileTemplate extends MemoryTemplate
 {
     protected string $_file = '';
 
-    function __construct(string $template = '', array $vars = [])
+    public function __construct(string $template = '', array $vars = [])
     {
         parent::__construct('', $vars);
         

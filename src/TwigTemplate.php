@@ -11,7 +11,7 @@ class TwigTemplate extends FileTemplate
 {
     protected Environment $_environment;
     
-    function __construct(string $template = '', array $vars = [])
+    public function __construct(string $template = '', array $vars = [])
     {
         parent::__construct($template, $vars);
         
@@ -46,8 +46,8 @@ class TwigTemplate extends FileTemplate
     public function addFunction(TwigFunction $function)
     {
         $this->_environment->addFunction($function);
-    }    
-
+    }
+    
     protected function compile(string $html): string
     {
        $this->_environment->getLoader()->setTemplate('result', $html);

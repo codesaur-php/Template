@@ -8,13 +8,13 @@ class MemoryTemplate
     
     protected array $_vars;
     
-    function __construct(string $template = '', array $vars = [])
+    public function __construct(string $template = '', array $vars = [])
     {
         $this->_html = $template;
         $this->_vars = $vars;
     }
     
-    final public function __toString()
+    public final function __toString()
     {
         return $this->output();
     }
@@ -24,7 +24,7 @@ class MemoryTemplate
         $this->_html = $html;
     }
 
-    final public function has(string $key): bool
+    public final function has(string $key): bool
     {
         return isset($this->getVars()[$key]);
     }
@@ -41,7 +41,7 @@ class MemoryTemplate
         }
     }
 
-    final public function &get(string $key)
+    public final function &get(string $key)
     {
         if ($this->has($key)) {
             return $this->_vars[$key];
@@ -87,7 +87,7 @@ class MemoryTemplate
         return $this->compile($this->getSource());
     }
     
-    function stringify($content): string
+    protected function stringify($content): string
     {
         if (is_array($content)) {
             $text = '';
