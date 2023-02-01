@@ -7,15 +7,15 @@ namespace codesaur\Router\Example;
  * This is an example script!
  */
 
-ini_set('display_errors', 'On');
-error_reporting(\E_ALL);
+\ini_set('display_errors', 'On');
+\error_reporting(\E_ALL);
 
 require_once '../vendor/autoload.php';
 
 use codesaur\Template\TwigTemplate;
 
 $template = new TwigTemplate(
-    dirname(__FILE__) . '/asperion.html',
+    \dirname(__FILE__) . '/asperion.html',
     ['menu' => ['Home', 'About', 'Technologies', 'Projects', 'Contacts', 'Custom']]
 );
 $template->set('partners', [

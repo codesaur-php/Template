@@ -50,7 +50,7 @@ class MemoryTemplate
         if (defined('CODESAUR_DEVELOPMENT')
                 && CODESAUR_DEVELOPMENT
         ) {
-            error_log("TEMPLATE KEY NOT DEFINED: $key");
+            \error_log("TEMPLATE KEY NOT DEFINED: $key");
         }
         
         $nulldata = null;
@@ -71,7 +71,7 @@ class MemoryTemplate
     {
         foreach ($this->getVars() as $key => $value) {
             $tagToReplace = "{{ $key }}";
-            $html = str_replace($tagToReplace, $this->stringify($value), $html);
+            $html = \str_replace($tagToReplace, $this->stringify($value), $html);
         }
         
         return $html;
@@ -89,7 +89,7 @@ class MemoryTemplate
     
     protected function stringify($content): string
     {
-        if (is_array($content)) {
+        if (\is_array($content)) {
             $text = '';
             foreach ($content as $str) {
                 $text .= $this->stringify($str);

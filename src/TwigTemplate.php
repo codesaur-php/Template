@@ -19,12 +19,12 @@ class TwigTemplate extends FileTemplate
         
         $this->addFilter(new TwigFilter('int', function ($variable)
         {
-            return intval($variable);
+            return \intval($variable);
         }));
         
         $this->addFilter(new TwigFilter('json_decode', function (string $data, $associative = true)
         {
-            return json_decode($data, $associative);
+            return \json_decode($data, $associative);
         }));
     }
     

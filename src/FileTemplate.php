@@ -35,16 +35,16 @@ class FileTemplate extends MemoryTemplate
                 throw new \Exception('Error settings of ' . __CLASS__);
             }
 
-            if (!file_exists($fileName)) {
+            if (!\file_exists($fileName)) {
                 throw new \Exception("Error loading template file [$fileName]");
             }
 
-            return file_get_contents($fileName) ?: '';
+            return \file_get_contents($fileName) ?: '';
         } catch (\Throwable $th) {
             if (defined('CODESAUR_DEVELOPMENT')
                     && CODESAUR_DEVELOPMENT
             ) {
-                error_log($th->getMessage());
+                \error_log($th->getMessage());
             }
             
             return $th->getMessage();
