@@ -31,7 +31,7 @@ class FileTemplate extends MemoryTemplate
     {
         $fileName = $this->getFileName();
         if (empty($fileName)) {
-            return 'Error settings of ' . __CLASS__;
+            return 'Error settings of ' . __CLASS__ . ': Must provide filename!';
         }
         if (!\file_exists($fileName)) {
             return "Template file [$fileName] not found!";
