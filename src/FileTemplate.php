@@ -31,13 +31,14 @@ class FileTemplate extends MemoryTemplate
     {
         $fileName = $this->getFileName();
         if (empty($fileName)) {
-            return 'Error settings of ' . __CLASS__ . ': Must provide filename!';
+            throw new \RuntimeException('Error settings of ' . __CLASS__ . ': Must provide filename!');
         }
         if (!\file_exists($fileName)) {
-            return "Template file [$fileName] not found!";
+            throw new \RuntimeException("Template file [$fileName] not found!");
         }
 
-        return \file_get_contents($fileName) ?: "Error getting contents of template file [$fileName]";
+        return \file_get_contents($fileName) ?:
+            throw new \RuntimeException("Error getting contents of template file [$fileName]");
     }
 
     public function output(): string
