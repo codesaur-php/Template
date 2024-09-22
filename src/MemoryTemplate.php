@@ -47,12 +47,6 @@ class MemoryTemplate
             return $this->_vars[$key];
         }
         
-        if (defined('CODESAUR_DEVELOPMENT')
-                && CODESAUR_DEVELOPMENT
-        ) {
-            \error_log("TEMPLATE KEY NOT DEFINED: $key");
-        }
-        
         $nulldata = null;
         return $nulldata;
     }
