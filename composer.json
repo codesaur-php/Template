@@ -1,17 +1,19 @@
 {
     "name": "codesaur/template",
-    "description": "An elegant object-oriented application development framework component for PHP 8.2.1 or newer",
+    "description": "Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой PHP template engine",
     "keywords": [
         "template", "html", "mongol", "mongolia", "монгол", "codesaur", "narankhuu", "coden", "кодзавр", "наранхүү", "коден"
     ],
     "homepage": "https://github.com/codesaur-php",
     "authors": [
         {
-            "name": "Narankhuu",
-            "email": "codesaur@gmail.com"
+            "name": "Narankhuu (+976 99000287)",
+            "email": "codesaur@gmail.com",
+            "homepage": "https://github.com/codesaur"
         }
     ],
     "require": {
+        "php": ">=8.2.1",
         "ext-json": "*",
         "twig/twig": ">=3.6.1"
     },

@@ -28,7 +28,7 @@ require_once '../vendor/autoload.php';
 use codesaur\Template\TwigTemplate;
 
 /**
- * TwigTemplate объект үүсгээд example.html темплейтэд дамжуулах өгөгдлүүдийг заана.
+ * TwigTemplate объект үүсгээд example.html темплейтэд дамжуулах өгөгдлүүдийг заая
  * 
  * - title  → Хуудасны гарчиг
  * - menu   → Navigation menu-ийн жагсаалт
@@ -44,5 +44,5 @@ $template = new TwigTemplate(__DIR__ . '/example.html', [
     ]
 ]);
 
-// Темплейттэй холбоотой бүх өгөгдлийг ашиглан финал HTML рэндэрлэж browser руу харуулна.
+// Темплейттэй холбоотой бүх өгөгдлийг ашиглан финал HTML рэндэрлэж browser руу харуулж байна.
 $template->render();

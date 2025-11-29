@@ -151,7 +151,6 @@ class MemoryTemplate
             function ($matches) {
                 $path = $matches[1];
                 $value = $this->resolveValue($path);
-
                 return $value !== null ? $this->stringify($value) : $matches[0];
             },
             $html

@@ -71,7 +71,6 @@ class FileTemplate extends MemoryTemplate
     public function getFileSource(): string
     {
         $fileName = $this->getFileName();
-
         if (empty($fileName)) {
             throw new \RuntimeException(
                 'Error settings of ' . __CLASS__ . ': Must provide filename!',
@@ -95,7 +94,6 @@ class FileTemplate extends MemoryTemplate
     public function output(): string
     {
         $this->source($this->getFileSource());
-
         return $this->compile($this->getSource());
     }
 }
