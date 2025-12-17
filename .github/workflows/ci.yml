@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        php-version:
+          - "8.2"
+          - "8.3"
+          - "8.4"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: json, mbstring, ctype
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Check PHP syntax
+        run: |
+          find src -name "*.php" -exec php -l {} \;
+          find example -name "*.php" -exec php -l {} \; || true
+
+      - name: Run PHPUnit tests
+        run: composer test
+
+      - name: Check code style (PHP CS Fixer, if available)
+        continue-on-error: true
+        run: |
+          if [ -f .php-cs-fixer.php ] || [ -f .php_cs ] || [ -f php-cs-fixer.php ]; then
+            composer run cs-fix || vendor/bin/php-cs-fixer fix --dry-run --diff
+          else
+            echo "No PHP CS Fixer configuration found, skipping code style check"
+          fi
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: json, mbstring, ctype
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Check PHP syntax
+        run: |
+          find src -name "*.php" -exec php -l {} \;
+          find example -name "*.php" -exec php -l {} \; || true
+

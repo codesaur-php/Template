@@ -179,3 +179,4 @@ class FileTemplateTest extends TestCase
         $this->assertEquals('Updated: Second!', $template->output());
     }
 }
+

@@ -189,7 +189,7 @@ TWIG;
      */
     public function testTwigFilterChain(): void
     {
-        file_put_contents($this->testTemplatePath, '{{ value|int }}');
+        \file_put_contents($this->testTemplatePath, '{{ value|int }}');
         $template = new TwigTemplate($this->testTemplatePath, ['value' => '42']);
         $this->assertEquals('42', $template->output());
     }
@@ -211,7 +211,7 @@ TWIG;
      */
     public function testTwigSyntaxErrorThrowsException(): void
     {
-        file_put_contents($this->testTemplatePath, '{% invalid syntax %}');
+        \file_put_contents($this->testTemplatePath, '{% invalid syntax %}');
         $template = new TwigTemplate($this->testTemplatePath, []);
 
         $this->expectException(\Twig\Error\SyntaxError::class);
@@ -224,7 +224,7 @@ TWIG;
     public function testAutoescapeDisabled(): void
     {
         $html = '<strong>{{ content }}</strong>';
-        file_put_contents($this->testTemplatePath, $html);
+        \file_put_contents($this->testTemplatePath, $html);
         $template = new TwigTemplate($this->testTemplatePath, ['content' => '<em>test</em>']);
         $output = $template->output();
         // Autoescape false тул HTML tag-ууд escape хийгдэхгүй

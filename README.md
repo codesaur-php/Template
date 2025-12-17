@@ -1,4 +1,7 @@
 # 🧩 codesaur/template  
+
+[![CI](https://github.com/codesaur-php/Template/actions/workflows/ci.yml/badge.svg)](https://github.com/codesaur-php/Template/actions/workflows/ci.yml)
+
 A lightweight and flexible PHP templating component for PHP 8.2.1 or newer.
 
 `codesaur/template` нь codesaur Framework-ийн нэг хэсэг бөгөөд энгийн
@@ -10,6 +13,19 @@ A lightweight and flexible PHP templating component for PHP 8.2.1 or newer.
 - **MemoryTemplate** - энгийн {{key}} placeholder-той lightweight engine  
 - **FileTemplate** - файл суурьтай template loader  
 - **TwigTemplate** - Twig engine-тэй бүрэн интеграцлагдсан advanced renderer  
+
+---
+
+## CI/CD
+
+Энэ төсөл нь GitHub Actions ашиглан автоматаар тест хийгддэг. CI/CD pipeline нь дараах зүйлсийг шалгана:
+
+- ✅ PHP 8.2, 8.3, 8.4 дээр синтакс шалгалт
+- ✅ Composer dependencies суурилуулалт
+- ✅ PHP файлуудын синтакс алдаа шалгалт
+- ✅ PHPUnit unit тестүүд ажиллуулах
+
+CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template/actions) хуудаснаас харж болно.
 
 ---
 
@@ -192,21 +208,53 @@ composer test-coverage
 
 ### 3. Test coverage харах
 
-Coverage report үүсгэх:
+Coverage report үүсгэхээсээ өмнө Xdebug суусан байх шаардлагатай. Xdebug coverage mode-ийг тохируулах:
 
-#### Windows:
+#### Windows (PowerShell):
 
 ```powershell
+# Xdebug mode тохируулах
+$env:XDEBUG_MODE="coverage"
+
+# Coverage report үүсгэх
 .\vendor\bin\phpunit --coverage-html coverage
+
+# Эсвэл Composer script ашиглах
+composer test-coverage
+```
+
+#### Windows (Command Prompt):
+
+```cmd
+REM Xdebug mode тохируулах
+set XDEBUG_MODE=coverage
+
+REM Coverage report үүсгэх
+vendor\bin\phpunit.bat --coverage-html coverage
 ```
 
 #### Linux / macOS:
 
 ```bash
+# Xdebug mode тохируулах
+export XDEBUG_MODE=coverage
+
+# Coverage report үүсгэх
 ./vendor/bin/phpunit --coverage-html coverage
+
+# Эсвэл Composer script ашиглах
+composer test-coverage
 ```
 
-Coverage report `coverage/` фолдерт үүснэ.
+**Анхаар:** Хэрэв Xdebug суусан бол `php.ini` файлд дараах тохиргоо нэмнэ үү:
+
+```ini
+[xdebug]
+zend_extension=xdebug
+xdebug.mode=coverage,debug
+```
+
+Coverage report `coverage/` фолдерт үүснэ. HTML файлыг браузер дээр нээж харж болно.
 
 ### 4. Тодорхой test файл ажиллуулах
 
@@ -276,19 +324,17 @@ Coverage report `coverage/` фолдерт үүснэ.
 
 Энэ багц нь дараах баримт бичгүүдтэй:
 
-- **[API.md](API.md)** - Бүрэн API баримт бичиг
+- **[API.md](API.md)** - Бүрэн API баримт бичиг (Cursor AI автоматаар үүсгэсэн бөгөөд PHPDoc comment-ууд болон код судалгааны үндсэн дээр)
   - Бүх класс, метод, параметр, return type-уудын дэлгэрэнгүй тайлбар
   - Exception reference
   - Ашиглалтын жишээнүүд
   - Best practices
   
-- **[REVIEW.md](REVIEW.md)** - Code Review баримт бичиг
+- **[REVIEW.md](REVIEW.md)** - Code Review баримт бичиг (Cursor AI)
   - Код сайжруулалтын тайлбар
   - Test coverage report
   - Code quality assessment
   - Metrics болон дүгнэлт
-
-> **Тайлбар:** Эдгээр баримт бичгүүд нь [Cursor AI](https://cursor.sh) ашиглан автоматаар үүсгэгдсэн бөгөөд PHPDoc comment-ууд болон код судалгааны үндсэн дээр бэлтгэгдсэн. Баримт бичгүүдийг шалгаж, сайжруулах боломжтой.
 
 ---
 
@@ -310,7 +356,8 @@ README.md
 API.md
 REVIEW.md
 composer.json
-phpunit.xml
+phpunit.xml.dist
+.github/workflows/ci.yml
 LICENSE
 ```
 
@@ -325,4 +372,6 @@ LICENSE
 ## Зохиогч
 
 **Narankhuu**  
-codesaur@gmail.com
+📧 codesaur@gmail.com  
+📱 +976 99000287  
+🌐 https://github.com/codesaur  

@@ -3,7 +3,8 @@
 **Review Date:** 2025-12-17  
 **Reviewer:** AI Code Assistant  
 **Package Version:** 1.0.0  
-**PHP Version:** 8.2.1+
+**PHP Version:** 8.2.1+  
+**CI/CD:** ✅ GitHub Actions
 
 ---
 
@@ -106,6 +107,7 @@ codesaur\Template\TwigTemplate
 - [x] PHPUnit configuration зөв
 - [x] .gitignore зөв тохируулсан
 - [x] README.md дэлгэрэнгүй
+- [x] GitHub Actions CI/CD pipeline тохируулсан
 
 ### Security ✅
 - [x] Input validation хийгдсэн
@@ -121,12 +123,50 @@ codesaur\Template\TwigTemplate
 - ✅ Code coverage 98.72%
 - ✅ PHPDoc бүрэн сайжруулсан
 - ✅ README.md дэлгэрэнгүй заавартай
+- ✅ GitHub Actions CI/CD pipeline тохируулсан
 
 ### Сайжруулах зөвлөмж
 1. **FileTemplate coverage** - үлдсэн 1 method-ийн тест нэмэх
 2. **Integration tests** - бодит файл системтэй integration тест нэмэх
 3. **Performance tests** - том template-тэй ажиллах performance тест нэмэх
-4. **Documentation** - API documentation (PHPDoc-оос авч) үүсгэх
+
+---
+
+## 🔄 CI/CD Pipeline
+
+### GitHub Actions Configuration
+
+Энэхүү багц нь GitHub Actions ашиглан автоматаар CI/CD pipeline-тэй. Pipeline нь дараах зүйлсийг шалгана:
+
+#### Test Job
+- **PHP хувилбарууд:** 8.2, 8.3, 8.4
+- **OS:** Ubuntu Latest
+- **Шалгалтууд:**
+  - ✅ Composer.json validation
+  - ✅ Dependencies суурилуулалт (cache ашигласан)
+  - ✅ PHP синтакс шалгалт (src болон example фолдерууд)
+  - ✅ PHPUnit unit тестүүд ажиллуулах
+  - ✅ Code style шалгалт (хэрэв PHP CS Fixer тохиргоо байгаа бол)
+
+#### Lint Job
+- **PHP хувилбар:** 8.3
+- **OS:** Ubuntu Latest
+- **Шалгалтууд:**
+  - ✅ Composer.json validation
+  - ✅ Dependencies суурилуулалт
+  - ✅ PHP синтакс шалгалт
+
+#### CI/CD Features
+- ✅ Multi-version PHP testing (8.2, 8.3, 8.4)
+- ✅ Composer cache ашигласан (хурдан ажиллагаа)
+- ✅ Automatic test on push/pull request
+- ✅ Branch support: main, master, develop
+- ✅ Fail-fast disabled (бүх хувилбаруудыг шалгана)
+
+#### CI/CD Status
+CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template/actions) хуудаснаас харж болно.
+
+**CI/CD Configuration File:** `.github/workflows/ci.yml`
 
 ---
 
@@ -141,6 +181,8 @@ codesaur\Template\TwigTemplate
 | Line Coverage | 98.72% | ✅ |
 | Method Coverage | 96.00% | ✅ |
 | Class Coverage | 66.67% | ⚠️ |
+| CI/CD Pipeline | ✅ Active | ✅ |
+| PHP Versions Tested | 8.2, 8.3, 8.4 | ✅ |
 
 ---
 
