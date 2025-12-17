@@ -286,9 +286,43 @@ Coverage report `coverage/` фолдерт үүснэ. HTML файлыг бра�
 
 ### Test файлууд
 
-- `tests/MemoryTemplateTest.php` - MemoryTemplate классын test
-- `tests/FileTemplateTest.php` - FileTemplate классын test
-- `tests/TwigTemplateTest.php` - TwigTemplate классын test
+#### Unit Tests
+- `tests/MemoryTemplateTest.php` - MemoryTemplate классын unit test
+- `tests/FileTemplateTest.php` - FileTemplate классын unit test
+- `tests/TwigTemplateTest.php` - TwigTemplate классын unit test
+
+#### Integration Tests
+- `tests/Integration/TemplateIntegrationTest.php` - Template classes-ийн integration test
+  - Бодит файл системтэй ажиллах тест
+  - Олон template файлууд хамтдаа ажиллах тест
+  - Real-world scenarios тест
+  - Template inheritance chain тест
+
+### 6. Integration test ажиллуулах
+
+Integration test нь бодит файл системтэй ажиллах, олон template-үүд хамтдаа ажиллах зэрэг бодит use case-уудыг шалгана.
+
+#### Windows:
+
+```powershell
+.\vendor\bin\phpunit tests/Integration/
+```
+
+#### Linux / macOS:
+
+```bash
+./vendor/bin/phpunit tests/Integration/
+```
+
+#### Тодорхой integration test method ажиллуулах:
+
+```bash
+# Windows
+.\vendor\bin\phpunit --filter testRealWorldScenario tests/Integration/
+
+# Linux / macOS
+./vendor/bin/phpunit --filter testRealWorldScenario tests/Integration/
+```
 
 ---
 

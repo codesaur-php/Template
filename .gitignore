@@ -8,6 +8,11 @@ composer.lock
 coverage/
 .phpunit.result.cache
 
+# Integration Tests
+/tests/Integration/temp/
+/tests/Integration/*.html
+/tests/Integration/*.tmp
+
 # IDE
 .idea/
 .vscode/
