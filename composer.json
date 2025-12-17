@@ -32,10 +32,10 @@
     },
     "scripts": {
         "test": [
-            "@php vendor/bin/phpunit"
+            "@php vendor/bin/phpunit --configuration phpunit.xml.dist"
         ],
         "test-coverage": [
-            "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html coverage"
+            "@php -d xdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage"
         ]
     },
     "license": "MIT",
