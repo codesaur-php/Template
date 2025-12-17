@@ -2,3 +2,15 @@
 /nbproject/
 
 composer.lock
+
+# PHPUnit
+.phpunit.cache/
+coverage/
+.phpunit.result.cache
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

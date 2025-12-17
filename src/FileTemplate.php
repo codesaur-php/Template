@@ -10,6 +10,10 @@ namespace codesaur\Template;
  * - Файл замыг зааж өгөөд template-г файлтай нь холбож ашиглана
  * - Файл уншиж байх үед filename, file_exists, permission зэрэг алдааг шалгана
  * - FileTemplate → MemoryTemplate compile() механизмыг ашиглан финал HTML гаргана
+ *
+ * @package codesaur\Template
+ * @author Narankhuu
+ * @since 1.0.0
  */
 class FileTemplate extends MemoryTemplate
 {
@@ -23,14 +27,16 @@ class FileTemplate extends MemoryTemplate
     /**
      * FileTemplate конструктор.
      *
-     * @param string $template Темплейт файлын зам
+     * @param string $template Темплейт файлын зам (хоосон байж болно, дараа file() методоор тохируулна)
      * @param array  $vars     Темплейтэд дамжуулах хувьсагчдын массив
      */
     public function __construct(string $template = '', array $vars = [])
     {
         parent::__construct('', $vars);
         
-        $this->file($template);
+        if (!empty($template)) {
+            $this->file($template);
+        }
     }
 
     /**
@@ -64,6 +70,8 @@ class FileTemplate extends MemoryTemplate
     /**
      * Тэмплейт файлын агуулгыг уншиж буцаана.
      *
+     * Файл заагаагүй, олдохгүй эсвэл уншихад алдаа гарвал RuntimeException шидэнэ.
+     *
      * @return string Файлын HTML/текст агуулга
      *
      * @throws \RuntimeException Файл заагаагүй, файл олдохгүй эсвэл уншихад алдаа гарвал
@@ -82,14 +90,23 @@ class FileTemplate extends MemoryTemplate
             throw new \RuntimeException("Template file [$fileName] not found!", 500);
         }
 
-        return \file_get_contents($fileName)
-            ?: throw new \RuntimeException("Error getting contents of template file [$fileName]", 500);
+        $contents = \file_get_contents($fileName);
+        if ($contents === false) {
+            throw new \RuntimeException("Error getting contents of template file [$fileName]", 500);
+        }
+
+        return $contents;
     }
 
     /**
      * Тэмплейт файлыг уншиж, MemoryTemplate-ийн compile() ашиглан финал HTML буцаана.
      *
+     * Энэ метод нь MemoryTemplate-ийн output() override хийж,
+     * файлын агуулгыг уншиж compile() руу дамжуулна.
+     *
      * @return string Финал боловсруулсан HTML
+     *
+     * @throws \RuntimeException Файл уншихад алдаа гарвал
      */
     public function output(): string
     {

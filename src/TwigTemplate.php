@@ -16,11 +16,15 @@ use Twig\Loader\ArrayLoader;
  * - FileTemplate ашиглан файлын агуулгыг авч Twig орчинд рэндэрлэнэ
  * - Custom Twig filter, function, global хувьсагч нэмэх боломжтой
  * - autoescape=false (HTML дээр шууд гарах текстийг өөрөө хянах боломж)
+ *
+ * @package codesaur\Template
+ * @author Narankhuu
+ * @since 1.0.0
  */
 class TwigTemplate extends FileTemplate
 {
     /**
-     * TwigEnvironment объект — Twig engine-г бүх тохиргоотой нь агуулна.
+     * TwigEnvironment объект - Twig engine-г бүх тохиргоотой нь агуулна.
      *
      * @var Environment
      */
@@ -102,13 +106,22 @@ class TwigTemplate extends FileTemplate
      * FileTemplate → файлын агуулгыг уншина,
      * MemoryTemplate → compile() override хийгдэж Twig рүү дамжина.
      *
+     * Энэ метод нь ArrayLoader ашиглан "result" нэртэй virtual template үүсгэж,
+     * Twig-ийн render() ашиглан боловсруулна.
+     *
      * @param string $html Файлаас уншсан template-ийн эх HTML
      * @return string Twig engine-ээр боловсруулсан финал HTML
+     *
+     * @throws \Twig\Error\LoaderError Template loader алдаа гарвал
+     * @throws \Twig\Error\RuntimeError Runtime алдаа гарвал
+     * @throws \Twig\Error\SyntaxError Template синтакс алдаа гарвал
      */
     protected function compile(string $html): string
     {
         // "result" нэртэй virtual template болгон бүртгэж рэндэрлэх
-        $this->_environment->getLoader()->setTemplate('result', $html);
+        /** @var ArrayLoader $loader */
+        $loader = $this->_environment->getLoader();
+        $loader->setTemplate('result', $html);
 
         return $this->_environment->render('result', $this->getVars());
     }

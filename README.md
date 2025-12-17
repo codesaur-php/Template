@@ -7,9 +7,9 @@ A lightweight and flexible PHP templating component for PHP 8.2.1 or newer.
 
 Багц нь дараах 3 үндсэн class-аас бүрдэнэ:
 
-- **MemoryTemplate** — энгийн {{key}} placeholder-той lightweight engine  
-- **FileTemplate** — файл суурьтай template loader  
-- **TwigTemplate** — Twig engine-тэй бүрэн интеграцлагдсан advanced renderer  
+- **MemoryTemplate** - энгийн {{key}} placeholder-той lightweight engine  
+- **FileTemplate** - файл суурьтай template loader  
+- **TwigTemplate** - Twig engine-тэй бүрэн интеграцлагдсан advanced renderer  
 
 ---
 
@@ -17,7 +17,7 @@ A lightweight and flexible PHP templating component for PHP 8.2.1 or newer.
 
 - 🟢 `{{ key }}`, `{{key}}`, `{{ user.profile.email }}` зэрэг бүх whitespace-тай/гүй форматыг дэмжинэ  
 - 🟢 Nested variable support (олон түвшний массив)  
-- 🟢 Төгс override бүтэц — Memory → File → Twig  
+- 🟢 Төгс override бүтэц - Memory → File → Twig  
 - 🟢 Twig filters, functions, globals бүрэн дэмжлэгтэй  
 - 🟢 Zero external dependencies (TwigTemplate ашигласан үед л Twig шаардлагатай)  
 - 🟢 Framework-agnostic тул codesaur, Laravel, Symfony, Slim болон бусад бүх PHP framework-тэй бүрэн нийцтэй
@@ -34,7 +34,7 @@ composer require codesaur/template
 
 ---
 
-## Ашиглах жишээ 1 — MemoryTemplate (simple)
+## Ашиглах жишээ 1 - MemoryTemplate (simple)
 
 ```
 use codesaur\Template\MemoryTemplate;
@@ -55,7 +55,7 @@ Hello, Narankhuu!
 
 ---
 
-## Ашиглах жишээ 2 — FileTemplate
+## Ашиглах жишээ 2 - FileTemplate
 
 ```
 use codesaur\Template\FileTemplate;
@@ -70,7 +70,7 @@ echo $template->output();
 
 ---
 
-## Ашиглах жишээ 3 — TwigTemplate (Bootstrap ашигласан example)
+## Ашиглах жишээ 3 - TwigTemplate (Bootstrap ашигласан example)
 
 `example/index.php`:
 
@@ -144,6 +144,106 @@ $template->render();
 
 ---
 
+## Unit Test ажиллуулах (Running Unit Tests)
+
+Энэ багц нь PHPUnit ашиглан бүрэн unit test-тэй. Test-үүдийг ажиллуулахын тулд:
+
+### 1. Dependencies суулгах
+
+```bash
+composer install
+```
+
+Эсвэл зөвхөн dev dependencies:
+
+```bash
+composer install --dev
+```
+
+### 2. Test ажиллуулах
+
+#### Windows (PowerShell эсвэл Command Prompt):
+
+```powershell
+# PowerShell ашиглаж байгаа бол
+.\vendor\bin\phpunit
+
+# Эсвэл Command Prompt
+vendor\bin\phpunit.bat
+```
+
+#### Linux / macOS:
+
+```bash
+./vendor/bin/phpunit
+```
+
+#### Аль ч OS дээр (Composer ашиглан):
+
+```bash
+composer test
+```
+
+Coverage report үүсгэх:
+
+```bash
+composer test-coverage
+```
+
+### 3. Test coverage харах
+
+Coverage report үүсгэх:
+
+#### Windows:
+
+```powershell
+.\vendor\bin\phpunit --coverage-html coverage
+```
+
+#### Linux / macOS:
+
+```bash
+./vendor/bin/phpunit --coverage-html coverage
+```
+
+Coverage report `coverage/` фолдерт үүснэ.
+
+### 4. Тодорхой test файл ажиллуулах
+
+#### Windows:
+
+```powershell
+.\vendor\bin\phpunit tests/MemoryTemplateTest.php
+```
+
+#### Linux / macOS:
+
+```bash
+./vendor/bin/phpunit tests/MemoryTemplateTest.php
+```
+
+### 5. Тодорхой test method ажиллуулах
+
+#### Windows:
+
+```powershell
+.\vendor\bin\phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
+```
+
+#### Linux / macOS:
+
+```bash
+./vendor/bin/phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
+```
+
+### Test файлууд
+
+- `tests/MemoryTemplateTest.php` - MemoryTemplate классын test
+- `tests/FileTemplateTest.php` - FileTemplate классын test
+- `tests/TwigTemplateTest.php` - TwigTemplate классын test
+
+---
+
 ## API Overview
 
 ### MemoryTemplate
@@ -168,6 +268,28 @@ $template->render();
   - `addFilter(TwigFilter $filter)`
   - `addFunction(TwigFunction $function)`
 
+**Дэлгэрэнгүй API баримт бичиг:** [API.md](API.md) файлыг үзнэ үү.
+
+---
+
+## Баримт бичиг (Documentation)
+
+Энэ багц нь дараах баримт бичгүүдтэй:
+
+- **[API.md](API.md)** - Бүрэн API баримт бичиг
+  - Бүх класс, метод, параметр, return type-уудын дэлгэрэнгүй тайлбар
+  - Exception reference
+  - Ашиглалтын жишээнүүд
+  - Best practices
+  
+- **[REVIEW.md](REVIEW.md)** - Code Review баримт бичиг
+  - Код сайжруулалтын тайлбар
+  - Test coverage report
+  - Code quality assessment
+  - Metrics болон дүгнэлт
+
+> **Тайлбар:** Эдгээр баримт бичгүүд нь [Cursor AI](https://cursor.sh) ашиглан автоматаар үүсгэгдсэн бөгөөд PHPDoc comment-ууд болон код судалгааны үндсэн дээр бэлтгэгдсэн. Баримт бичгүүдийг шалгаж, сайжруулах боломжтой.
+
 ---
 
 ## Жишээ фолдер бүтэц
@@ -180,8 +302,15 @@ $template->render();
     MemoryTemplate.php
     FileTemplate.php
     TwigTemplate.php
+/tests
+    MemoryTemplateTest.php
+    FileTemplateTest.php
+    TwigTemplateTest.php
 README.md
+API.md
+REVIEW.md
 composer.json
+phpunit.xml
 LICENSE
 ```
 

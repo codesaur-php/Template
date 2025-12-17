@@ -11,11 +11,15 @@ namespace codesaur\Template;
  * - Олон түвшний өгөгдөл (multi-level array) дэмжинэ: {{ user.profile.email }}
  * - Үндсэндээ simple replace-д суурилсан хурдан, хөнгөн ажиллагаатай
  * - String, массив зэрэг бүх төрлийн өгөгдлийг stringify хэлбэрээр буцаана
+ *
+ * @package codesaur\Template
+ * @author Narankhuu
+ * @since 1.0.0
  */
 class MemoryTemplate
 {
     /**
-     * Темплейтийн үндсэн HTML эсвэл текст эх сурвалц.
+     * Темплейтийн үндсэн HTML эсвэл текст эх сурвалч.
      *
      * @var string
      */
@@ -24,7 +28,7 @@ class MemoryTemplate
     /**
      * Темплейтэд оруулах хувьсагчдын массив.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $_vars;
 
@@ -73,24 +77,24 @@ class MemoryTemplate
     }
 
     /**
-     * Темплейтэд ашиглах хувьсагчийг name=value хэлбэрээр нэмэх.
+     * Темплейтэд ашиглах хувьсагчийг name=value хэлбэрээр нэмэх эсвэл шинэчлэх.
      *
-     * @param string $key
-     * @param mixed  $value
+     * @param string $key   Хувьсагчийн түлхүүр (key)
+     * @param mixed  $value Хувьсагчийн утга (ямар ч төрөл)
      * @return void
      */
-    public function set(string $key, $value)
+    public function set(string $key, $value): void
     {
         $this->_vars[$key] = $value;
     }
     
     /**
-     * Нэгэн зэрэг олон хувьсагч нэмэх.
+     * Нэгэн зэрэг олон хувьсагч нэмэх эсвэл шинэчлэх.
      *
-     * @param array $values
+     * @param array<string, mixed> $values Хувьсагчдын массив
      * @return void
      */
-    public function setVars(array $values)
+    public function setVars(array $values): void
     {
         foreach ($values as $var => $value) {
             $this->set($var, $value);
@@ -98,10 +102,12 @@ class MemoryTemplate
     }
 
     /**
-     * Хувьсагчийн утгыг аваад reference байдлаар буцаана.
+     * Хувьсагчийн утгыг reference байдлаар буцаана.
      *
-     * @param string $key
-     * @return mixed
+     * Хувьсагч олдохгүй бол null буцаана.
+     *
+     * @param string $key Хувьсагчийн түлхүүр
+     * @return mixed Хувьсагчийн утга эсвэл null
      */
     public final function &get(string $key)
     {
@@ -116,7 +122,7 @@ class MemoryTemplate
     /**
      * Темплейтэд ашиглаж буй бүх хувьсагчдын массивыг авах.
      *
-     * @return array
+     * @return array<string, mixed> Хувьсагчдын массив
      */
     public function getVars(): array
     {
@@ -137,12 +143,14 @@ class MemoryTemplate
      * Темплейтийн tag-уудыг боловсруулж финал HTML гаргана.
      *
      * Дэмжигдэх синтакс:
-     * {{ key }}
-     * {{key}}
-     * {{   user.profile.email   }}
+     * - {{ key }}
+     * - {{key}}
+     * - {{   user.profile.email   }}
      *
-     * @param string $html Темплейтийн эх HTML
-     * @return string Боловсруулсан финал HTML
+     * Хувьсагч олдохгүй бол tag өөрөө үлдэнэ.
+     *
+     * @param string $html Темплейтийн эх HTML эсвэл текст
+     * @return string Боловсруулсан финал HTML эсвэл текст
      */
     protected function compile(string $html): string
     {
@@ -160,8 +168,10 @@ class MemoryTemplate
     /**
      * Олон түвшний key (user.profile.email гэх мэт)-ийн утгыг мөрдөж авах.
      *
-     * @param string $path "a.b.c" хэлбэртэй key path
-     * @return mixed|null Олдсон утга эсвэл null
+     * Жишээ: "user.profile.email" → $vars['user']['profile']['email']
+     *
+     * @param string $path "a.b.c" хэлбэртэй key path (цэгээр тусгаарлагдсан)
+     * @return mixed|null Олдсон утга эсвэл null (олдохгүй бол)
      */
     protected function resolveValue(string $path)
     {
@@ -204,8 +214,11 @@ class MemoryTemplate
     /**
      * Массив эсвэл дурын төрлийн өгөгдлийг текст болгон хөрвүүлэх.
      *
-     * @param mixed $content
-     * @return string
+     * Массив бол бүх элементүүдийг дараалан нэгтгэнэ.
+     * Бусад төрөл бол string cast хийнэ.
+     *
+     * @param mixed $content Хөрвүүлэх өгөгдөл
+     * @return string Текст хэлбэрт хөрвүүлсэн утга
      */
     protected function stringify($content): string
     {

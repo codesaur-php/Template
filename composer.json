@@ -17,10 +17,22 @@
         "ext-json": "*",
         "twig/twig": ">=3.6.1"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
     "autoload": {
         "psr-4": {
             "codesaur\\Template\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "codesaur\\Template\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage"
     },
     "license": "MIT",
     "minimum-stability": "dev"
