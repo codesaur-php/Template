@@ -1,6 +1,6 @@
 <?php
 
-namespace codesaur\Router\Example;
+namespace codesaur\Template\Example;
 
 /**
  * codesaur Template багцын жишээ скрипт.
@@ -14,8 +14,13 @@ namespace codesaur\Router\Example;
  * - Bootstrap дээр суурилсан минимал layout рэндэрлэх
  *
  * Ашиглах нөхцөл:
- * - Composer autoload шаардлагатай
+ * - Composer autoload шаардлагатай (vendor/autoload.php)
  * - example.html файл энэхүү скрипттэй нэг хавтсанд байрлана
+ * - PHP 8.2.1 эсвэл түүнээс дээш хувилбар шаардлагатай
+ *
+ * @package codesaur\Template\Example
+ * @author Narankhuu
+ * @since 1.0.0
  */
 
 // Debug тохиргоо (жишээ код тул алдаа дэлгэцэнд шууд гаргана)
@@ -28,11 +33,12 @@ require_once '../vendor/autoload.php';
 use codesaur\Template\TwigTemplate;
 
 /**
- * TwigTemplate объект үүсгээд example.html темплейтэд дамжуулах өгөгдлүүдийг заая
- * 
- * - title  → Хуудасны гарчиг
- * - menu   → Navigation menu-ийн жагсаалт
- * - items  → Жишээ мэдээллийн картууд
+ * TwigTemplate объект үүсгээд example.html темплейтэд дамжуулах өгөгдлүүдийг заая.
+ *
+ * Template-д дамжуулах хувьсагчдын тайлбар:
+ * - title  → Хуудасны гарчиг (string)
+ * - menu   → Navigation menu-ийн жагсаалт (array<string>)
+ * - items  → Жишээ мэдээллийн картууд (array<array{title: string, text: string}>)
  */
 $template = new TwigTemplate(__DIR__ . '/example.html', [
     'title' => 'Темплейтийн жишээ',
@@ -44,5 +50,10 @@ $template = new TwigTemplate(__DIR__ . '/example.html', [
     ]
 ]);
 
-// Темплейттэй холбоотой бүх өгөгдлийг ашиглан финал HTML рэндэрлэж browser руу харуулж байна.
+/**
+ * Темплейттэй холбоотой бүх өгөгдлийг ашиглан финал HTML рэндэрлэж
+ * browser руу харуулна.
+ *
+ * render() метод нь output() методыг дуудаж echo хийнэ.
+ */
 $template->render();

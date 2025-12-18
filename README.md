@@ -1,8 +1,10 @@
 # 🧩 codesaur/template  
 
 [![CI](https://github.com/codesaur-php/Template/actions/workflows/ci.yml/badge.svg)](https://github.com/codesaur-php/Template/actions/workflows/ci.yml)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.2.1-777BB4.svg?logo=php)](https://www.php.net/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-A lightweight and flexible PHP templating component for PHP 8.2.1 or newer.
+Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой template engine.
 
 `codesaur/template` нь codesaur Framework-ийн нэг хэсэг бөгөөд энгийн
 текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл
@@ -24,6 +26,7 @@ A lightweight and flexible PHP templating component for PHP 8.2.1 or newer.
 - ✅ Composer dependencies суурилуулалт
 - ✅ PHP файлуудын синтакс алдаа шалгалт
 - ✅ PHPUnit unit тестүүд ажиллуулах
+- ✅ PHPUnit integration тестүүд ажиллуулах
 
 CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template/actions) хуудаснаас харж болно.
 
@@ -37,6 +40,8 @@ CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template
 - 🟢 Twig filters, functions, globals бүрэн дэмжлэгтэй  
 - 🟢 Zero external dependencies (TwigTemplate ашигласан үед л Twig шаардлагатай)  
 - 🟢 Framework-agnostic тул codesaur, Laravel, Symfony, Slim болон бусад бүх PHP framework-тэй бүрэн нийцтэй
+- 🟢 Бүрэн PHPDoc баримт бичиг (бүх method, parameter, return type тодорхой)
+- 🟢 Unit болон Integration тестүүд (45 unit + 10 integration тест)
 
 ---
 
@@ -358,13 +363,13 @@ Integration test нь бодит файл системтэй ажиллах, о�
 
 Энэ багц нь дараах баримт бичгүүдтэй:
 
-- **[API.md](API.md)** - Бүрэн API баримт бичиг (Cursor AI автоматаар үүсгэсэн бөгөөд PHPDoc comment-ууд болон код судалгааны үндсэн дээр)
+- **[API.md](API.md)** - Бүрэн API баримт бичиг (PHPDoc-уудаас Cursor AI ашиглан автоматаар үүсгэсэн)
   - Бүх класс, метод, параметр, return type-уудын дэлгэрэнгүй тайлбар
   - Exception reference
   - Ашиглалтын жишээнүүд
   - Best practices
   
-- **[REVIEW.md](REVIEW.md)** - Code Review баримт бичиг (Cursor AI)
+- **[REVIEW.md](REVIEW.md)** - Шалгалтын тайлан (Cursor AI ашиглан үүсгэсэн)
   - Код сайжруулалтын тайлбар
   - Test coverage report
   - Code quality assessment
@@ -378,6 +383,7 @@ Integration test нь бодит файл системтэй ажиллах, о�
 /example
     index.php
     example.html
+    .htaccess
 /src
     MemoryTemplate.php
     FileTemplate.php
@@ -386,6 +392,8 @@ Integration test нь бодит файл системтэй ажиллах, о�
     MemoryTemplateTest.php
     FileTemplateTest.php
     TwigTemplateTest.php
+    /Integration
+        TemplateIntegrationTest.php
 README.md
 API.md
 REVIEW.md
@@ -407,5 +415,5 @@ LICENSE
 
 **Narankhuu**  
 📧 codesaur@gmail.com  
-📱 +976 99000287  
+📲 [+976 99000287](https://wa.me/97699000287)  
 🌐 https://github.com/codesaur  

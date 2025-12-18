@@ -1,11 +1,19 @@
+# mod_rewrite модуль идэвхтэй байвал дараах тохиргоонуудыг ашиглана
 <IfModule mod_rewrite.c>
+# URL rewrite механизмыг идэвхжүүлнэ
 RewriteEngine On
 
+# Хүсэлт хийгдсэн файл бодит файл биш бол (файл олдохгүй)
 RewriteCond %{REQUEST_FILENAME} !-f
+# Хүсэлт хийгдсэн зам бодит фолдер биш бол (фолдер олдохгүй)
 RewriteCond %{REQUEST_FILENAME} !-d
 
+# Бүх хүсэлтийг index.php руу чиглүүлнэ (L флаг нь сүүлийн дүрэм гэсэн утга)
 RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
+
+# mod_rewrite модуль идэвхгүй байвал дараах тохиргоог ашиглана
 <IfModule !mod_rewrite.c>
+# Фолдеруудын жагсаалтыг харуулахыг хориглоно (аюулгүй байдлын үүднээс)
 Options -Indexes
 </IfModule>

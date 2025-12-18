@@ -57,10 +57,10 @@ class MemoryTemplate
     /**
      * Темплейтийн эх HTML/текст агуулгыг тохируулна.
      *
-     * @param string $html
+     * @param string $html Темплейтийн HTML эсвэл текст агуулга
      * @return void
      */
-    public function source(string $html)
+    public function source(string $html): void
     {
         $this->_html = $html;
     }
@@ -68,8 +68,8 @@ class MemoryTemplate
     /**
      * Тодорхой хувьсагч template-д байгаа эсэхийг шалгана.
      *
-     * @param string $key
-     * @return bool
+     * @param string $key Шалгах хувьсагчийн түлхүүр
+     * @return bool Хувьсагч байвал true, байхгүй бол false
      */
     public final function has(string $key): bool
     {
@@ -132,7 +132,7 @@ class MemoryTemplate
     /**
      * Темплейтийн эх HTML/текстийг буцаах.
      *
-     * @return string
+     * @return string Темплейтийн эх HTML эсвэл текст агуулга
      */
     public function getSource(): string
     {
@@ -204,7 +204,10 @@ class MemoryTemplate
     /**
      * Темплейтийн финал боловсруулсан HTML-г буцаана.
      *
-     * @return string
+     * Энэ метод нь compile() ашиглан template-ийн tag-уудыг орлуулж,
+     * боловсруулсан HTML эсвэл текст буцаана.
+     *
+     * @return string Боловсруулсан финал HTML эсвэл текст
      */
     public function output(): string
     {

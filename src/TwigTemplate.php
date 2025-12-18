@@ -33,8 +33,11 @@ class TwigTemplate extends FileTemplate
     /**
      * TwigTemplate конструктор.
      *
-     * @param string $template Темплейтийн файлын зам
-     * @param array  $vars     Темплейтэд дамжуулах хувьсагчдын массив
+     * Twig Environment болон ArrayLoader үүсгэж, энгийн custom filter-үүд
+     * (int, json_decode) нэмнэ.
+     *
+     * @param string $template Темплейтийн файлын зам (хоосон байж болно)
+     * @param array<string, mixed> $vars Темплейтэд дамжуулах хувьсагчдын массив
      */
     public function __construct(string $template = '', array $vars = [])
     {
@@ -59,7 +62,9 @@ class TwigTemplate extends FileTemplate
     /**
      * Twig Environment объект буцаах.
      *
-     * @return Environment
+     * Environment объектыг ашиглан илүү дэлгэрэнгүй тохиргоо хийх боломжтой.
+     *
+     * @return Environment Twig Environment объект
      */
     public function getEnvironment(): Environment
     {
@@ -69,11 +74,13 @@ class TwigTemplate extends FileTemplate
     /**
      * Темплейтэд гадаад глобал хувьсагч нэмэх.
      *
-     * @param string $name  Хувьсагч нэр
-     * @param mixed  $value Хувьсагчийн утга
+     * Глобал хувьсагч нь бүх template-д хүртээмжтэй байна.
+     *
+     * @param string $name  Глобал хувьсагчийн нэр
+     * @param mixed  $value Глобал хувьсагчийн утга (ямар ч төрөл)
      * @return void
      */
-    public function addGlobal(string $name, $value)
+    public function addGlobal(string $name, $value): void
     {
         $this->_environment->addGlobal($name, $value);
     }
@@ -81,10 +88,13 @@ class TwigTemplate extends FileTemplate
     /**
      * Twig-д custom filter нэмэх.
      *
-     * @param TwigFilter $filter
+     * Custom filter нэмсний дараа template-д ашиглаж болно.
+     * Жишээ: {{ value|custom_filter }}
+     *
+     * @param TwigFilter $filter Нэмэх Twig filter объект
      * @return void
      */
-    public function addFilter(TwigFilter $filter)
+    public function addFilter(TwigFilter $filter): void
     {
         $this->_environment->addFilter($filter);
     }
@@ -92,10 +102,13 @@ class TwigTemplate extends FileTemplate
     /**
      * Twig-д custom function нэмэх.
      *
-     * @param TwigFunction $function
+     * Custom function нэмсний дараа template-д ашиглаж болно.
+     * Жишээ: {{ custom_function(arg1, arg2) }}
+     *
+     * @param TwigFunction $function Нэмэх Twig function объект
      * @return void
      */
-    public function addFunction(TwigFunction $function)
+    public function addFunction(TwigFunction $function): void
     {
         $this->_environment->addFunction($function);
     }

@@ -42,13 +42,13 @@ class FileTemplate extends MemoryTemplate
     /**
      * Ашиглах темплейт файлын замыг тохируулна.
      *
-     * @param string $filepath Темплейт файлын зам
+     * @param string $filepath Темплейт файлын бүрэн зам (absolute эсвэл relative path)
      *
      * @return void
      *
      * @throws \InvalidArgumentException Файлын нэр хоосон байвал
      */
-    public function file(string $filepath)
+    public function file(string $filepath): void
     {
         if (empty($filepath)) {
             throw new \InvalidArgumentException(__CLASS__ . ': Must provide filename');
@@ -60,7 +60,7 @@ class FileTemplate extends MemoryTemplate
     /**
      * Одоогоор тохируулсан темплейт файлын замыг буцаана.
      *
-     * @return string
+     * @return string Темплейт файлын бүрэн зам (хоосон байж болно)
      */
     public function getFileName(): string
     {

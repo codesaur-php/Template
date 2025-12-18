@@ -2,7 +2,7 @@
 
 **Version:** 1.0.0  
 **PHP Version:** 8.2.1+  
-**Last Updated:** 2025-12-17
+**Last Updated:** 2025-12-17  
 
 ---
 
@@ -788,12 +788,60 @@ TwigTemplate нь Twig-ийн бүх синтакс дэмждэг:
 2. **FileTemplate** - Файл суурьтай template-д ашиглах
 3. **TwigTemplate** - Нарийн төвөгтэй template, loops, conditions шаардлагатай үед ашиглах
 
-4. Exception handling - Файл унших, template рэндэр хийх үед try-catch ашиглах
-5. Variable validation - Хувьсагч байгаа эсэхийг `has()` методоор шалгах
-6. Template caching - Production орчинд template cache ашиглах (TwigTemplate-д)
+4. **Exception handling** - Файл унших, template рэндэр хийх үед try-catch ашиглах
+5. **Variable validation** - Хувьсагч байгаа эсэхийг `has()` методоор шалгах
+6. **Template caching** - Production орчинд template cache ашиглах (TwigTemplate-д)
+7. **Type hints** - Бүх method-ууд дээр type hints ашиглах (PHP 8.2+)
+8. **PHPDoc** - Бүх public method-ууд дээр дэлгэрэнгүй PHPDoc comment бичих
+
+---
+
+## Testing
+
+Энэ багц нь бүрэн unit болон integration тестүүдтэй:
+
+- **Unit Tests:** 45 тест, 59 assertions
+- **Integration Tests:** 10 тест (бодит файл системтэй ажиллах)
+- **Test Coverage:** 98.72% line coverage
+
+Тест ажиллуулах:
+```bash
+composer test
+```
+
+Integration тест ажиллуулах:
+```bash
+vendor/bin/phpunit tests/Integration/
+```
+
+Дэлгэрэнгүй мэдээллийг [README.md](README.md) файлаас үзнэ үү.
+
+---
+
+## Recent Improvements
+
+### PHPDoc Enhancements (2025-12-17)
+- ✅ Бүх method-ууд дээр дэлгэрэнгүй `@param` тайлбар нэмэгдсэн
+- ✅ Бүх method-ууд дээр `@return` тайлбар нэмэгдсэн
+- ✅ Return type declaration-ууд нэмэгдсэн (`void` зэрэг)
+- ✅ Array type annotation-ууд нэмэгдсэн (`array<string, mixed>`)
+- ✅ Exception-уудын тайлбар сайжруулагдсан
+- ✅ Method-уудын дэлгэрэнгүй тайлбар, жишээнүүд нэмэгдсэн
+
+### Integration Tests (2025-12-17)
+- ✅ 10 integration test нэмэгдсэн
+- ✅ Бодит файл системтэй ажиллах тест
+- ✅ Real-world scenarios тест
+- ✅ Template inheritance chain тест
+
+### CI/CD Pipeline (2025-12-17)
+- ✅ GitHub Actions CI/CD pipeline тохируулагдсан
+- ✅ PHP 8.2, 8.3, 8.4 дээр автоматаар тест
+- ✅ Integration тестүүд CI/CD-д нэмэгдсэн
 
 ---
 
 **Documentation Generated:** 2025-12-17  
 **Package:** codesaur/template  
+**Last Updated:** 2025-12-17  
 **Author:** Narankhuu
