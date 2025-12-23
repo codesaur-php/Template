@@ -15,7 +15,7 @@
     "require": {
         "php": "^8.2.1",
         "ext-json": "*",
-        "twig/twig": "^3.6.1"
+        "twig/twig": "^3.22.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0"
