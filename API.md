@@ -4,6 +4,8 @@
 **PHP Version:** 8.2.1+  
 **Last Updated:** 2025-12-17  
 
+**Хэл:** **🇲🇳 Монгол** | [🇬🇧 English](API.EN.md)
+
 ---
 
 ## Table of Contents

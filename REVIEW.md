@@ -8,6 +8,8 @@
 **CI/CD:** ✅ GitHub Actions  
 **Documentation:** ✅ PHPDoc сайжруулагдсан
 
+**Хэл:** **🇲🇳 Монгол** | [🇬🇧 English](REVIEW.EN.md)
+
 ---
 
 ## 🎯 Ерөнхий үнэлгээ (Overall Assessment)

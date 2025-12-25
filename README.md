@@ -4,6 +4,8 @@
 [![PHP Version](https://img.shields.io/badge/php-%5E8.2.1-777BB4.svg?logo=php)](https://www.php.net/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+**Хэл:** **🇲🇳 Монгол** | [🇬🇧 English](README.EN.md)
+
 Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой template engine.
 
 `codesaur/template` нь codesaur Framework-ийн нэг хэсэг бөгөөд энгийн
@@ -215,19 +217,6 @@ composer test-coverage
 
 Coverage report үүсгэхээсээ өмнө Xdebug суусан байх шаардлагатай. Xdebug coverage mode-ийг тохируулах:
 
-#### Windows (PowerShell):
-
-```powershell
-# Xdebug mode тохируулах
-$env:XDEBUG_MODE="coverage"
-
-# Coverage report үүсгэх
-.\vendor\bin\phpunit --coverage-html coverage
-
-# Эсвэл Composer script ашиглах
-composer test-coverage
-```
-
 #### Windows (Command Prompt):
 
 ```cmd
@@ -265,8 +254,8 @@ Coverage report `coverage/` фолдерт үүснэ. HTML файлыг бра�
 
 #### Windows:
 
-```powershell
-.\vendor\bin\phpunit tests/MemoryTemplateTest.php
+```cmd
+vendor\bin\phpunit.bat tests/MemoryTemplateTest.php
 ```
 
 #### Linux / macOS:
@@ -279,8 +268,8 @@ Coverage report `coverage/` фолдерт үүснэ. HTML файлыг бра�
 
 #### Windows:
 
-```powershell
-.\vendor\bin\phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
+```cmd
+vendor\bin\phpunit.bat --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
 ```
 
 #### Linux / macOS:
@@ -309,8 +298,8 @@ Integration test нь бодит файл системтэй ажиллах, о�
 
 #### Windows:
 
-```powershell
-.\vendor\bin\phpunit tests/Integration/
+```cmd
+vendor\bin\phpunit.bat tests/Integration/
 ```
 
 #### Linux / macOS:
@@ -323,7 +312,7 @@ Integration test нь бодит файл системтэй ажиллах, о�
 
 ```bash
 # Windows
-.\vendor\bin\phpunit --filter testRealWorldScenario tests/Integration/
+vendor\bin\phpunit.bat --filter testRealWorldScenario tests/Integration/
 
 # Linux / macOS
 ./vendor/bin/phpunit --filter testRealWorldScenario tests/Integration/
@@ -363,13 +352,13 @@ Integration test нь бодит файл системтэй ажиллах, о�
 
 Энэ багц нь дараах баримт бичгүүдтэй:
 
-- **[API.md](API.md)** - Бүрэн API баримт бичиг (PHPDoc-уудаас Cursor AI ашиглан автоматаар үүсгэсэн)
+- **[API.md](API.md)** / [API.EN.md](API.EN.md) - Бүрэн API баримт бичиг (PHPDoc-уудаас Cursor AI ашиглан автоматаар үүсгэсэн)
   - Бүх класс, метод, параметр, return type-уудын дэлгэрэнгүй тайлбар
   - Exception reference
   - Ашиглалтын жишээнүүд
   - Best practices
   
-- **[REVIEW.md](REVIEW.md)** - Шалгалтын тайлан (Cursor AI ашиглан үүсгэсэн)
+- **[REVIEW.md](REVIEW.md)** / [REVIEW.EN.md](REVIEW.EN.md) - Шалгалтын тайлан (Cursor AI ашиглан үүсгэсэн)
   - Код сайжруулалтын тайлбар
   - Test coverage report
   - Code quality assessment
