@@ -289,41 +289,6 @@ This package includes the following documentation:
 
 ---
 
-## Example Folder Structure
-
-```
-/example
-    index.php
-    example.html
-    .htaccess
-/src
-    MemoryTemplate.php
-    FileTemplate.php
-    TwigTemplate.php
-/tests
-    MemoryTemplateTest.php
-    FileTemplateTest.php
-    TwigTemplateTest.php
-    PerformanceTest.php
-    MemoryTest.php
-    /Integration
-        TemplateIntegrationTest.php
-README.md
-README.EN.md
-API.md
-API.EN.md
-REVIEW.md
-REVIEW.EN.md
-CHANGELOG.md
-CHANGELOG.EN.md
-composer.json
-phpunit.xml.dist
-.github/workflows/ci.yml
-LICENSE
-```
-
----
-
 ## Changelog
 
 For version history and changes, see [CHANGELOG](../../CHANGELOG.md) file.
