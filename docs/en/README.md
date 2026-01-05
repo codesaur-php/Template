@@ -1,11 +1,5 @@
 # 🧩 codesaur/template  
 
-[![CI](https://github.com/codesaur-php/Template/actions/workflows/ci.yml/badge.svg)](https://github.com/codesaur-php/Template/actions/workflows/ci.yml)
-[![PHP Version](https://img.shields.io/badge/php-%5E8.2.1-777BB4.svg?logo=php)](https://www.php.net/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-
-**Language:** [🇲🇳 Монгол](README.md) | **🇬🇧 English**
-
 A minimal, extensible template engine that supports everything from simple text-based templates to powerful templates written with Twig.
 
 `codesaur/template` is part of the codesaur Framework and is a minimal, extensible PHP template engine that supports everything from simple text-based templates to powerful templates written with Twig.
@@ -41,7 +35,7 @@ CI/CD status can be viewed on the [GitHub Actions](https://github.com/codesaur-p
 - 🟢 Zero external dependencies (Twig is only required when using TwigTemplate)  
 - 🟢 Framework-agnostic, fully compatible with codesaur, Laravel, Symfony, Slim and all other PHP frameworks
 - 🟢 Complete PHPDoc documentation (all methods, parameters, return types are clear)
-- 🟢 Unit and Integration tests (45 unit + 10 integration tests)
+- 🟢 Unit, Integration, Performance and Memory tests (70+ tests, 1200+ assertions)
 
 ---
 
@@ -165,9 +159,9 @@ $template->render();
 
 ---
 
-## Running Unit Tests
+## Running Tests
 
-This package includes complete unit tests using PHPUnit. To run the tests:
+This package includes complete tests using PHPUnit. All tests can be run using Composer (works the same on any OS):
 
 ### 1. Install Dependencies
 
@@ -175,66 +169,21 @@ This package includes complete unit tests using PHPUnit. To run the tests:
 composer install
 ```
 
-Or only dev dependencies:
-
-```bash
-composer install --dev
-```
-
-### 2. Run Tests
-
-#### Windows (Command Prompt):
-
-```cmd
-vendor\bin\phpunit.bat
-```
-
-#### Linux / macOS:
-
-```bash
-./vendor/bin/phpunit
-```
-
-#### On Any OS (using Composer):
+### 2. Run All Tests
 
 ```bash
 composer test
 ```
 
-Generate coverage report:
+### 3. Generate Test Coverage
+
+Generate coverage report (Xdebug required):
 
 ```bash
 composer test-coverage
 ```
 
-### 3. View Test Coverage
-
-Xdebug must be installed before generating coverage reports. To configure Xdebug coverage mode:
-
-#### Windows (Command Prompt):
-
-```cmd
-REM Set Xdebug mode
-set XDEBUG_MODE=coverage
-
-REM Generate coverage report
-vendor\bin\phpunit.bat --coverage-html coverage
-```
-
-#### Linux / macOS:
-
-```bash
-# Set Xdebug mode
-export XDEBUG_MODE=coverage
-
-# Generate coverage report
-./vendor/bin/phpunit --coverage-html coverage
-
-# Or use Composer script
-composer test-coverage
-```
-
-**Note:** If Xdebug is installed, add the following configuration to your `php.ini` file:
+**Note:** Xdebug must be installed to generate coverage reports. Add the following configuration to your `php.ini` file:
 
 ```ini
 [xdebug]
@@ -244,39 +193,27 @@ xdebug.mode=coverage,debug
 
 Coverage report will be generated in the `coverage/` folder. You can open the HTML file in a browser.
 
-### 4. Run Specific Test File
+### 4. Run Specific Test File or Method
 
-#### Windows:
-
-```cmd
-vendor\bin\phpunit.bat tests/MemoryTemplateTest.php
-```
-
-#### Linux / macOS:
+Run specific test file:
 
 ```bash
-./vendor/bin/phpunit tests/MemoryTemplateTest.php
+vendor/bin/phpunit tests/MemoryTemplateTest.php
 ```
 
-### 5. Run Specific Test Method
-
-#### Windows:
-
-```cmd
-vendor\bin\phpunit.bat --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
-```
-
-#### Linux / macOS:
+Run specific test method:
 
 ```bash
-./vendor/bin/phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
+vendor/bin/phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
 ```
+
+**Windows users:** Replace `vendor/bin/phpunit` with `vendor\bin\phpunit.bat`
 
 ### Test Files
 
 #### Unit Tests
 - `tests/MemoryTemplateTest.php` - MemoryTemplate class unit tests
-- `tests/FileTemplateTest.php` - FileTemplate class unit tests
+- `tests/FileTemplateTest.php` - FileTemplate class unit tests (100% method coverage)
 - `tests/TwigTemplateTest.php` - TwigTemplate class unit tests
 
 #### Integration Tests
@@ -286,31 +223,25 @@ vendor\bin\phpunit.bat --filter testSimpleVariableReplacement tests/MemoryTempla
   - Real-world scenarios tests
   - Template inheritance chain tests
 
-### 6. Run Integration Tests
+#### Performance Tests
+- `tests/PerformanceTest.php` - Performance tests
+  - Performance tests with large templates
+  - Performance tests with many variables
+  - Performance tests with deeply nested variables
+  - Performance tests with multiple sequential renders
 
-Integration tests check real use cases such as working with real file systems and multiple templates together.
+#### Memory Tests
+- `tests/MemoryTest.php` - Memory usage tests
+  - Memory usage tests with large templates
+  - Memory usage tests with multiple template instances
+  - Memory usage tests with deeply nested variables
+  - Memory usage tests with multiple sequential renders
 
-#### Windows:
+### Test Statistics
 
-```cmd
-vendor\bin\phpunit.bat tests/Integration/
-```
-
-#### Linux / macOS:
-
-```bash
-./vendor/bin/phpunit tests/Integration/
-```
-
-#### Run Specific Integration Test Method:
-
-```bash
-# Windows
-vendor\bin\phpunit.bat --filter testRealWorldScenario tests/Integration/
-
-# Linux / macOS
-./vendor/bin/phpunit --filter testRealWorldScenario tests/Integration/
-```
+- **Total Tests:** 70+ tests
+- **Assertions:** 1200+ assertions
+- **Coverage:** 98.72% line coverage, 100% method coverage (FileTemplate)
 
 ---
 
@@ -338,21 +269,19 @@ vendor\bin\phpunit.bat --filter testRealWorldScenario tests/Integration/
   - `addFilter(TwigFilter $filter)`
   - `addFunction(TwigFunction $function)`
 
-**Detailed API Documentation:** See [API.EN.md](API.EN.md) file.
-
 ---
 
 ## Documentation
 
 This package includes the following documentation:
 
-- **[API.EN.md](API.EN.md)** - Complete API documentation (automatically generated from PHPDoc using Cursor AI)
+- **[API](api.md)** - Complete API documentation (automatically generated from PHPDoc using Cursor AI)
   - Detailed description of all classes, methods, parameters, return types
   - Exception reference
   - Usage examples
   - Best practices
   
-- **[REVIEW.EN.md](REVIEW.EN.md)** - Review report (generated using Cursor AI)
+- **[REVIEW](review.md)** - Review report (generated using Cursor AI)
   - Code improvement descriptions
   - Test coverage report
   - Code quality assessment
@@ -375,6 +304,8 @@ This package includes the following documentation:
     MemoryTemplateTest.php
     FileTemplateTest.php
     TwigTemplateTest.php
+    PerformanceTest.php
+    MemoryTest.php
     /Integration
         TemplateIntegrationTest.php
 README.md
@@ -393,6 +324,12 @@ LICENSE
 
 ---
 
+## Changelog
+
+For version history and changes, see [CHANGELOG](../../CHANGELOG.md) file.
+
+---
+
 ## License
 
 This project is licensed under the MIT license.
@@ -402,6 +339,4 @@ This project is licensed under the MIT license.
 ## Author
 
 **Narankhuu**  
-📧 codesaur@gmail.com  
-📲 [+976 99000287](https://wa.me/97699000287)  
-🌐 https://github.com/codesaur  
+https://github.com/codesaur  

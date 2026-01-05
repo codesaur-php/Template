@@ -166,6 +166,19 @@ class FileTemplateTest extends TestCase
     }
 
     /**
+     * getFileSource() метод файл заагаагүй үед exception шидэх тест.
+     */
+    public function testGetFileSourceThrowsExceptionWhenFileNameIsEmpty(): void
+    {
+        $template = new FileTemplate('', []);
+        $this->assertEquals('', $template->getFileName());
+        
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Must provide filename');
+        $template->getFileSource();
+    }
+
+    /**
      * Файлын агуулгыг дахин унших тест (динамик өөрчлөлт).
      */
     public function testFileContentReReadOnOutput(): void

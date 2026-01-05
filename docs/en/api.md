@@ -1,10 +1,8 @@
 # 📚 API Documentation - codesaur/template
 
-**Version:** 1.0.0  
+**Version:** 3.0.2  
 **PHP Version:** 8.2.1+  
-**Last Updated:** 2025-12-17  
-
-**Language:** [🇲🇳 Монгол](API.md) | **🇬🇧 English**
+**Last Updated:** 2026-01-05  
 
 ---
 
@@ -795,55 +793,3 @@ For more information, see [Twig Documentation](https://twig.symfony.com/doc/).
 6. **Template caching** - Use template cache in production environment (for TwigTemplate)
 7. **Type hints** - Use type hints on all methods (PHP 8.2+)
 8. **PHPDoc** - Write detailed PHPDoc comments on all public methods
-
----
-
-## Testing
-
-This package includes complete unit and integration tests:
-
-- **Unit Tests:** 45 tests, 59 assertions
-- **Integration Tests:** 10 tests (working with real file system)
-- **Test Coverage:** 98.72% line coverage
-
-Run tests:
-```bash
-composer test
-```
-
-Run integration tests:
-```bash
-vendor/bin/phpunit tests/Integration/
-```
-
-For more information, see the [README.EN.md](README.EN.md) file.
-
----
-
-## Recent Improvements
-
-### PHPDoc Enhancements (2025-12-17)
-- ✅ Detailed `@param` descriptions added to all methods
-- ✅ `@return` descriptions added to all methods
-- ✅ Return type declarations added (`void`, etc.)
-- ✅ Array type annotations added (`array<string, mixed>`)
-- ✅ Exception descriptions enhanced
-- ✅ Detailed method descriptions and examples added
-
-### Integration Tests (2025-12-17)
-- ✅ 10 integration tests added
-- ✅ Tests working with real file system
-- ✅ Real-world scenarios tests
-- ✅ Template inheritance chain tests
-
-### CI/CD Pipeline (2025-12-17)
-- ✅ GitHub Actions CI/CD pipeline configured
-- ✅ Automatic tests on PHP 8.2, 8.3, 8.4
-- ✅ Integration tests added to CI/CD
-
----
-
-**Documentation Generated:** 2025-12-17  
-**Package:** codesaur/template  
-**Last Updated:** 2025-12-17  
-**Author:** Narankhuu
