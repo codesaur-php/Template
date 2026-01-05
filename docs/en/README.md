@@ -2,7 +2,7 @@
 
 A minimal, extensible template engine that supports everything from simple text-based templates to powerful templates written with Twig.
 
-`codesaur/template` is part of the codesaur Framework and is a minimal, extensible PHP template engine that supports everything from simple text-based templates to powerful templates written with Twig.
+`codesaur/template` is part of the **codesaur ecosystem** and is a minimal, extensible PHP template engine that supports everything from simple text-based templates to powerful templates written with Twig.
 
 The package consists of the following 3 core classes:
 
