@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.3] - 2026-01-06
+[3.0.3]: https://github.com/codesaur-php/Template/compare/v3.0.2...v3.0.3
+
+### 🔧 Changed
+
+#### Documentation
+- ✅ Fixed minor typos and errors in documentation files
+  - Improved consistency in documentation formatting
+
+---
+
 ## [3.0.2] - 2026-01-05
+[3.0.2]: https://github.com/codesaur-php/Template/compare/v3.0.1...v3.0.2
 
 ### ✨ Added
 
@@ -72,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [3.0.1] - 2025-12-25
+[3.0.1]: https://github.com/codesaur-php/Template/compare/v3.0.0...v3.0.1
 
 ### ✨ Added
 
@@ -86,32 +99,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [3.0.0] - 2025-12-17
-
-### 🎉 Stable Release
-
-This version is the stable release of the `codesaur/template` package.
+[3.0.0]: https://github.com/codesaur-php/Template/compare/v1.0...v3.0.0
 
 ### ✨ Added
 
 #### Core Functionality
-- ✅ **MemoryTemplate** - Lightweight template engine with simple {{key}} placeholders
-  - Support for whitespace/no-whitespace formats (`{{ key }}`, `{{key}}`, `{{   key   }}`)
-  - Nested variable support (multi-level arrays, e.g., `{{ user.profile.email }}`)
-  - Template source and variable management (set, get, has, setVars, getVars)
-  - Render and output functions
-
-- ✅ **FileTemplate** - File-based template loader (extends MemoryTemplate)
-  - Read templates from file system
-  - File path management
-  - All FileTemplate functionality + MemoryTemplate functionality
-
-- ✅ **TwigTemplate** - Advanced renderer fully integrated with Twig engine (extends FileTemplate)
-  - Twig Environment integration
-  - Add custom filters (`addFilter`)
-  - Add custom functions (`addFunction`)
-  - Add global variables (`addGlobal`)
-  - Built-in filters: `int`, `json_decode`
-  - Full support for all Twig syntax (variables, filters, functions, control structures, comments)
+- ✅ Support for whitespace/no-whitespace formats (`{{ key }}`, `{{key}}`, `{{   key   }}`)
+- ✅ Nested variable support (multi-level arrays, e.g., `{{ user.profile.email }}`)
 
 #### Testing
 - ✅ 45 unit tests, 59 assertions
@@ -156,6 +150,29 @@ This version is the stable release of the `codesaur/template` package.
 - ✅ Custom filter/function integration tests
 - ✅ Template caching simulation tests
 
-[3.0.2]: https://github.com/codesaur-php/Template/compare/v3.0.1...v3.0.2
-[3.0.1]: https://github.com/codesaur-php/Template/compare/v3.0.0...v3.0.1
-[3.0.0]: https://github.com/codesaur-php/Template/compare/v1.0...v3.0.0
+## [1.0] - 2021-03-09
+[1.0]: https://github.com/codesaur-php/Template/releases/tag/v1.0
+
+### 🎉 Stable Release
+
+This version is the stable release of the `codesaur/template` package.
+
+### ✨ Added
+
+#### Core Functionality
+- ✅ **MemoryTemplate** - Lightweight template engine with simple {{key}} placeholders
+  - Template source and variable management (set, get, has, setVars, getVars)
+  - Render and output functions
+
+- ✅ **FileTemplate** - File-based template loader (extends MemoryTemplate)
+  - Read templates from file system
+  - File path management
+  - All FileTemplate functionality + MemoryTemplate functionality
+
+- ✅ **TwigTemplate** - Advanced renderer fully integrated with Twig engine (extends FileTemplate)
+  - Twig Environment integration
+  - Add custom filters (`addFilter`)
+  - Add custom functions (`addFunction`)
+  - Add global variables (`addGlobal`)
+  - Built-in filters: `int`, `json_decode`
+  - Full support for all Twig syntax (variables, filters, functions, control structures, comments)
