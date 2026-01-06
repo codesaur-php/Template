@@ -63,7 +63,6 @@ Use clear and descriptive commit messages, for example:
 - `fix: resolve nested variable replacement issue`
 - `feat: add custom filter support for TwigTemplate`
 - `docs: update README examples`
-- Update `CHANGELOG.md` for notable changes
 
 ---
 
@@ -72,6 +71,7 @@ Use clear and descriptive commit messages, for example:
 If your change affects usage or public API:
 - Update `README.md`
 - Update files under `docs/` if needed
+- Update `CHANGELOG.md` for notable changes
 
 ---
 
