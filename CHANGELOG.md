@@ -150,6 +150,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ Custom filter/function integration tests
 - ✅ Template caching simulation tests
 
+---
+
 ## [1.0] - 2021-03-09
 [1.0]: https://github.com/codesaur-php/Template/releases/tag/v1.0
 
