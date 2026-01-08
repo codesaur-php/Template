@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [3.0.0] - 2025-12-17
+## [3.0.0] - 2026-01-08
 [3.0.0]: https://github.com/codesaur-php/Template/compare/v2.0.0...v3.0.0
 
 ### 🎉 Stable Release
