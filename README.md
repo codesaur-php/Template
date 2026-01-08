@@ -14,7 +14,7 @@
 
 Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой template engine.
 
-`codesaur/template` нь codesaur Framework-ийн нэг хэсэг бөгөөд энгийн
+`codesaur/template` нь **codesaur ecosystem**-ийн нэг хэсэг бөгөөд энгийн
 текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл
 дэмждэг минимал, өргөтгөх боломжтой PHP template engine юм.
 
@@ -36,7 +36,7 @@
 
 A minimal, extensible template engine that supports everything from simple text-based templates to powerful templates written with Twig.
 
-`codesaur/template` is part of the codesaur Framework and is a minimal, extensible PHP template engine that supports everything from simple text-based templates to powerful templates written with Twig.
+`codesaur/template` is part of the **codesaur ecosystem** and is a minimal, extensible PHP template engine that supports everything from simple text-based templates to powerful templates written with Twig.
 
 The package consists of the following 3 core classes:
 
