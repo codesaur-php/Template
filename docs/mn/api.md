@@ -1,8 +1,6 @@
 # 📚 API Documentation - codesaur/template
 
-**Version:** 3.0.2  
-**PHP Version:** 8.2.1+  
-**Last Updated:** 2026-01-05  
+**Last Updated:** 2026-01-08  
 
 ---
 
