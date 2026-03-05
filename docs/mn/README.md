@@ -1,4 +1,4 @@
-# 🧩 codesaur/template  
+# codesaur/template  
 
 Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой template engine.
 
@@ -18,11 +18,11 @@
 
 Энэ төсөл нь GitHub Actions ашиглан автоматаар тест хийгддэг. CI/CD pipeline нь дараах зүйлсийг шалгана:
 
-- ✅ PHP 8.2, 8.3, 8.4 дээр синтакс шалгалт
-- ✅ Composer dependencies суурилуулалт
-- ✅ PHP файлуудын синтакс алдаа шалгалт
-- ✅ PHPUnit unit тестүүд ажиллуулах
-- ✅ PHPUnit integration тестүүд ажиллуулах
+- PHP 8.2, 8.3, 8.4 дээр синтакс шалгалт
+- Composer dependencies суурилуулалт
+- PHP файлуудын синтакс алдаа шалгалт
+- PHPUnit unit тестүүд ажиллуулах
+- PHPUnit integration тестүүд ажиллуулах
 
 CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template/actions) хуудаснаас харж болно.
 
@@ -30,14 +30,14 @@ CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template
 
 ## Онцлог
 
-- 🟢 `{{ key }}`, `{{key}}`, `{{ user.profile.email }}` зэрэг бүх whitespace-тай/гүй форматыг дэмжинэ  
-- 🟢 Nested variable support (олон түвшний массив)  
-- 🟢 Төгс override бүтэц - Memory → File → Twig  
-- 🟢 Twig filters, functions, globals бүрэн дэмжлэгтэй  
-- 🟢 Zero external dependencies (TwigTemplate ашигласан үед л Twig шаардлагатай)  
-- 🟢 Framework-agnostic тул codesaur, Laravel, Symfony, Slim болон бусад бүх PHP framework-тэй бүрэн нийцтэй
-- 🟢 Бүрэн PHPDoc баримт бичиг (бүх method, parameter, return type тодорхой)
-- 🟢 Unit, Integration, Performance болон Memory тестүүд (70+ тест, 1200+ assertions)
+- `{{ key }}`, `{{key}}`, `{{ user.profile.email }}` зэрэг бүх whitespace-тай/гүй форматыг дэмжинэ  
+- Nested variable support (олон түвшний массив)  
+- Төгс override бүтэц - Memory -> File -> Twig  
+- Twig filters, functions, globals бүрэн дэмжлэгтэй  
+- Zero external dependencies (TwigTemplate ашигласан үед л Twig шаардлагатай)  
+- Framework-agnostic тул codesaur, Laravel, Symfony, Slim болон бусад бүх PHP framework-тэй бүрэн нийцтэй
+- Бүрэн PHPDoc баримт бичиг (бүх method, parameter, return type тодорхой)
+- Unit, Integration, Performance болон Memory тестүүд (70+ тест, 1200+ assertions)
 
 ---
 

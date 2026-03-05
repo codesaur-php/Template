@@ -1,4 +1,4 @@
-# 📚 API Documentation - codesaur/template
+# API Documentation - codesaur/template
 
 **Last Updated:** 2026-01-08  
 
@@ -25,8 +25,8 @@
 **Inheritance Hierarchy:**
 ```
 MemoryTemplate
-    └── FileTemplate
-        └── TwigTemplate
+    |-- FileTemplate
+        |-- TwigTemplate
 ```
 
 ---
@@ -256,7 +256,7 @@ $html = $template->output(); // "Hello, World!"
 
 Олон түвшний key (user.profile.email гэх мэт)-ийн утгыг мөрдөж авах.
 
-**Example:** `"user.profile.email"` → `$vars['user']['profile']['email']`
+**Example:** `"user.profile.email"` -> `$vars['user']['profile']['email']`
 
 **Parameters:**
 - `string $path` - "a.b.c" хэлбэртэй key path (цэгээр тусгаарлагдсан)
@@ -354,7 +354,7 @@ $path = $template->getFileName(); // '/path/to/template.html'
 
 #### `getFileSource(): string`
 
-Тэмплейт файлын агуулгыг уншиж буцаана.
+Темплейт файлын агуулгыг уншиж буцаана.
 
 **Returns:** `string` - Файлын HTML/текст агуулга
 
@@ -371,7 +371,7 @@ $content = $template->getFileSource(); // Файлын агуулга
 
 #### `output(): string`
 
-Тэмплейт файлыг уншиж, `MemoryTemplate`-ийн `compile()` ашиглан финал HTML буцаана.
+Темплейт файлыг уншиж, `MemoryTemplate`-ийн `compile()` ашиглан финал HTML буцаана.
 
 Энэ метод нь `MemoryTemplate`-ийн `output()` override хийж, файлын агуулгыг уншиж `compile()` руу дамжуулна.
 
@@ -524,7 +524,7 @@ $template->addFunction(new TwigFunction('greet', function ($name) {
 
 TwigTemplate-ийн үндсэн compile функц.
 
-FileTemplate → файлын агуулгыг уншина, MemoryTemplate → `compile()` override хийгдэж Twig рүү дамжина.
+FileTemplate -> файлын агуулгыг уншина, MemoryTemplate -> `compile()` override хийгдэж Twig рүү дамжина.
 
 Энэ метод нь ArrayLoader ашиглан "result" нэртэй virtual template үүсгэж, Twig-ийн `render()` ашиглан боловсруулна.
 

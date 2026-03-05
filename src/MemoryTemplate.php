@@ -168,7 +168,7 @@ class MemoryTemplate
     /**
      * Олон түвшний key (user.profile.email гэх мэт)-ийн утгыг мөрдөж авах.
      *
-     * Жишээ: "user.profile.email" → $vars['user']['profile']['email']
+     * Жишээ: "user.profile.email" -> $vars['user']['profile']['email']
      *
      * @param string $path "a.b.c" хэлбэртэй key path (цэгээр тусгаарлагдсан)
      * @return mixed|null Олдсон утга эсвэл null (олдохгүй бол)

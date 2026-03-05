@@ -116,8 +116,8 @@ class TwigTemplate extends FileTemplate
     /**
      * TwigTemplate-ийн үндсэн compile функц.
      *
-     * FileTemplate → файлын агуулгыг уншина,
-     * MemoryTemplate → compile() override хийгдэж Twig рүү дамжина.
+     * FileTemplate -> файлын агуулгыг уншина,
+     * MemoryTemplate -> compile() override хийгдэж Twig рүү дамжина.
      *
      * Энэ метод нь ArrayLoader ашиглан "result" нэртэй virtual template үүсгэж,
      * Twig-ийн render() ашиглан боловсруулна.

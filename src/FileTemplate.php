@@ -9,7 +9,7 @@ namespace codesaur\Template;
  * Онцлог:
  * - Файл замыг зааж өгөөд template-г файлтай нь холбож ашиглана
  * - Файл уншиж байх үед filename, file_exists, permission зэрэг алдааг шалгана
- * - FileTemplate → MemoryTemplate compile() механизмыг ашиглан финал HTML гаргана
+ * - FileTemplate -> MemoryTemplate compile() механизмыг ашиглан финал HTML гаргана
  *
  * @package codesaur\Template
  * @author Narankhuu

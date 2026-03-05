@@ -1,4 +1,4 @@
-# 🧩 codesaur/template  
+# codesaur/template  
 
 A minimal, extensible template engine that supports everything from simple text-based templates to powerful templates written with Twig.
 
@@ -16,11 +16,11 @@ The package consists of the following 3 core classes:
 
 This project is automatically tested using GitHub Actions. The CI/CD pipeline checks the following:
 
-- ✅ Syntax check on PHP 8.2, 8.3, 8.4
-- ✅ Composer dependencies installation
-- ✅ PHP file syntax error check
-- ✅ PHPUnit unit tests execution
-- ✅ PHPUnit integration tests execution
+- Syntax check on PHP 8.2, 8.3, 8.4
+- Composer dependencies installation
+- PHP file syntax error check
+- PHPUnit unit tests execution
+- PHPUnit integration tests execution
 
 CI/CD status can be viewed on the [GitHub Actions](https://github.com/codesaur-php/Template/actions) page.
 
@@ -28,14 +28,14 @@ CI/CD status can be viewed on the [GitHub Actions](https://github.com/codesaur-p
 
 ## Features
 
-- 🟢 Supports all whitespace/no-whitespace formats such as `{{ key }}`, `{{key}}`, `{{ user.profile.email }}`  
-- 🟢 Nested variable support (multi-level arrays)  
-- 🟢 Perfect override structure - Memory → File → Twig  
-- 🟢 Full support for Twig filters, functions, globals  
-- 🟢 Zero external dependencies (Twig is only required when using TwigTemplate)  
-- 🟢 Framework-agnostic, fully compatible with codesaur, Laravel, Symfony, Slim and all other PHP frameworks
-- 🟢 Complete PHPDoc documentation (all methods, parameters, return types are clear)
-- 🟢 Unit, Integration, Performance and Memory tests (70+ tests, 1200+ assertions)
+- Supports all whitespace/no-whitespace formats such as `{{ key }}`, `{{key}}`, `{{ user.profile.email }}`  
+- Nested variable support (multi-level arrays)  
+- Perfect override structure - Memory -> File -> Twig  
+- Full support for Twig filters, functions, globals  
+- Zero external dependencies (Twig is only required when using TwigTemplate)  
+- Framework-agnostic, fully compatible with codesaur, Laravel, Symfony, Slim and all other PHP frameworks
+- Complete PHPDoc documentation (all methods, parameters, return types are clear)
+- Unit, Integration, Performance and Memory tests (70+ tests, 1200+ assertions)
 
 ---
 

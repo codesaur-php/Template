@@ -36,9 +36,9 @@ use codesaur\Template\TwigTemplate;
  * TwigTemplate объект үүсгээд example.html темплейтэд дамжуулах өгөгдлүүдийг заая.
  *
  * Template-д дамжуулах хувьсагчдын тайлбар:
- * - title  → Хуудасны гарчиг (string)
- * - menu   → Navigation menu-ийн жагсаалт (array<string>)
- * - items  → Жишээ мэдээллийн картууд (array<array{title: string, text: string}>)
+ * - title  -- Хуудасны гарчиг (string)
+ * - menu   -- Navigation menu-ийн жагсаалт (array<string>)
+ * - items  -- Жишээ мэдээллийн картууд (array<array{title: string, text: string}>)
  */
 $template = new TwigTemplate(__DIR__ . '/example.html', [
     'title' => 'Темплейтийн жишээ',

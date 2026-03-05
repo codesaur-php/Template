@@ -1,4 +1,4 @@
-# 📚 API Documentation - codesaur/template
+# API Documentation - codesaur/template
 
 **Last Updated:** 2026-01-08  
 
@@ -25,8 +25,8 @@
 **Inheritance Hierarchy:**
 ```
 MemoryTemplate
-    └── FileTemplate
-        └── TwigTemplate
+    |-- FileTemplate
+        |-- TwigTemplate
 ```
 
 ---
@@ -256,7 +256,7 @@ If a variable is not found, the tag itself remains.
 
 Resolves the value of a multi-level key (like user.profile.email).
 
-**Example:** `"user.profile.email"` → `$vars['user']['profile']['email']`
+**Example:** `"user.profile.email"` -> `$vars['user']['profile']['email']`
 
 **Parameters:**
 - `string $path` - Key path in "a.b.c" format (dot-separated)
@@ -524,7 +524,7 @@ $template->addFunction(new TwigFunction('greet', function ($name) {
 
 Main compile function of TwigTemplate.
 
-FileTemplate → reads file content, MemoryTemplate → `compile()` is overridden and passed to Twig.
+FileTemplate -> reads file content, MemoryTemplate -> `compile()` is overridden and passed to Twig.
 
 This method creates a virtual template named "result" using ArrayLoader and processes it using Twig's `render()`.
 

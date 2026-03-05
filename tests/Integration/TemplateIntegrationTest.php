@@ -66,7 +66,7 @@ class TemplateIntegrationTest extends TestCase
     }
 
     /**
-     * MemoryTemplate → FileTemplate → TwigTemplate дамжин ажиллах integration тест.
+     * MemoryTemplate -> FileTemplate -> TwigTemplate дамжин ажиллах integration тест.
      */
     public function testTemplateInheritanceChain(): void
     {
