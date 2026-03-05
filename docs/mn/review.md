@@ -193,21 +193,21 @@ CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template
 
 ## Metrics
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| Total Classes | 3 |  |
-| Total Methods | 25 |  |
-| Test Cases | 70+ |  |
-| Unit Tests | MemoryTemplate, FileTemplate (100%), TwigTemplate |  |
-| Integration Tests | 10 |  |
-| Performance Tests | 6 |  |
-| Memory Tests | 8 |  |
-| Test Assertions | 1200+ |  |
-| Line Coverage | 98.72% |  |
-| Method Coverage | 96.00% |  |
-| Class Coverage | 66.67% |  |
-| CI/CD Pipeline |  Active |  |
-| PHP Versions Tested | 8.2, 8.3, 8.4 |  |
+| Metric | Value |
+|--------|-------|
+| Total Classes | 3 |
+| Total Methods | 25 |
+| Test Cases | 70+ |
+| Unit Tests | MemoryTemplate, FileTemplate (100%), TwigTemplate |
+| Integration Tests | 10 |
+| Performance Tests | 6 |
+| Memory Tests | 8 |
+| Test Assertions | 1200+ |
+| Line Coverage | 98.72% |
+| Method Coverage | 96.00% |
+| Class Coverage | 66.67% |
+| CI/CD Pipeline | Active |
+| PHP Versions Tested | 8.2, 8.3, 8.4 |
 
 ---
 
