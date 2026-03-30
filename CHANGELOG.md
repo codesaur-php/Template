@@ -69,7 +69,7 @@ This version is the stable release of the `codesaur/template` package with compl
 - 100% line coverage, 100% method coverage
 
 #### CI/CD
-- GitHub Actions CI/CD pipeline (PHP 8.2, 8.3, 8.4)
+- GitHub Actions CI/CD pipeline (PHP 8.2)
 
 #### Documentation
 - README.md, API.md, REVIEW.md (Mongolian and English)

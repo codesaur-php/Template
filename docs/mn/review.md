@@ -107,9 +107,8 @@ MemoryTemplate нь бүрэн template engine-ийг агуулдаг. FileTemp
 
 ### GitHub Actions Configuration
 
-- **PHP Versions:** 8.2, 8.3, 8.4
+- **PHP Version:** 8.2
 - **OS:** Ubuntu Latest
-- Multi-version PHP testing
 - Composer cache ашигласан
 - Automatic test on push/pull request
 
@@ -128,7 +127,7 @@ CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template
 | Test Cases | 95 |
 | Test Assertions | 1267 |
 | CI/CD Pipeline | Active |
-| PHP Versions Tested | 8.2, 8.3, 8.4 |
+| PHP Version Tested | 8.2 |
 
 ---
 

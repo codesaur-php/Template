@@ -102,9 +102,8 @@ MemoryTemplate contains the complete template engine. FileTemplate is a thin wra
 
 ### GitHub Actions Configuration
 
-- **PHP Versions:** 8.2, 8.3, 8.4
+- **PHP Version:** 8.2
 - **OS:** Ubuntu Latest
-- Multi-version PHP testing
 - Composer cache used
 - Automatic test on push/pull request
 
@@ -123,7 +122,7 @@ CI/CD status can be viewed on the [GitHub Actions](https://github.com/codesaur-p
 | Test Cases | 95 |
 | Test Assertions | 1267 |
 | CI/CD Pipeline | Active |
-| PHP Versions Tested | 8.2, 8.3, 8.4 |
+| PHP Version Tested | 8.2 |
 
 ---
 

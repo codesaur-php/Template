@@ -15,7 +15,7 @@ The package consists of 2 core classes:
 
 This project is automatically tested using GitHub Actions. The CI/CD pipeline checks the following:
 
-- Syntax check on PHP 8.2, 8.3, 8.4
+- Syntax check on PHP 8.2
 - Composer dependencies installation
 - PHP file syntax error check
 - PHPUnit unit tests execution
