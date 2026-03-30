@@ -1,16 +1,15 @@
-# codesaur/template  
+# codesaur/template
 
-Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой template engine.
+Бие даасан PHP template engine. Хөгжлийн явцад Twig template engine-ийн синтакс, дизайн загвараас санаа авч чадамжуудаа өргөжүүлсэн.
 
 `codesaur/template` нь **codesaur ecosystem**-ийн нэг хэсэг бөгөөд энгийн
-текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл
-дэмждэг минимал, өргөтгөх боломжтой PHP template engine юм.
+текст-суурьтай темплейтээс эхлээд if, for, macro, filter зэрэг бүрэн боломжтой
+хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой PHP template engine юм.
 
-Багц нь дараах 3 үндсэн class-аас бүрдэнэ:
+Багц нь дараах 2 үндсэн class-аас бүрдэнэ:
 
-- **MemoryTemplate** - энгийн {{key}} placeholder-той lightweight engine  
-- **FileTemplate** - файл суурьтай template loader  
-- **TwigTemplate** - Twig engine-тэй бүрэн интеграцлагдсан advanced renderer  
+- **MemoryTemplate** - бүрэн template engine (if, for, filter, function, macro, expression parser, 33 built-in filter)
+- **FileTemplate** - файлын системээс template уншиж рэндэрлэх wrapper (MemoryTemplate-ийг өргөтгөнө)
 
 ---
 
@@ -30,14 +29,15 @@ CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template
 
 ## Онцлог
 
-- `{{ key }}`, `{{key}}`, `{{ user.profile.email }}` зэрэг бүх whitespace-тай/гүй форматыг дэмжинэ  
-- Nested variable support (олон түвшний массив)  
-- Төгс override бүтэц - Memory -> File -> Twig  
-- Twig filters, functions, globals бүрэн дэмжлэгтэй  
-- Zero external dependencies (TwigTemplate ашигласан үед л Twig шаардлагатай)  
-- Framework-agnostic тул codesaur, Laravel, Symfony, Slim болон бусад бүх PHP framework-тэй бүрэн нийцтэй
-- Бүрэн PHPDoc баримт бичиг (бүх method, parameter, return type тодорхой)
-- Unit, Integration, Performance болон Memory тестүүд (70+ тест, 1200+ assertions)
+- `{{ key }}`, `{{key}}`, `{{ user.profile.email }}` зэрэг бүх whitespace-тай/гүй форматыг дэмжинэ
+- Nested variable support (олон түвшний массив)
+- Бүрэн template синтакс: if/elseif/else, for loops, macros, filters, functions, expressions
+- 33 built-in filter (e, escape, date, length, keys, slice, split, merge, json_encode, number_format, capitalize, upper, lower, default, round, nl2br, url_encode, format, first, last гм.)
+- Custom filter/function бүртгэх: `addFilter()`, `addFunction()`
+- MemoryTemplate дээрээ бүрэн engine ажиллана. FileTemplate зөвхөн файл уншдаг wrapper
+- Framework-agnostic тул codesaur, Laravel, Symfony, Slim болон бусад бүх PHP framework-тэй нийцтэй
+- Бүрэн PHPDoc баримт бичиг
+- Unit, Integration, Performance болон Memory тестүүд (95 тест, 1267 assertions)
 
 ---
 
@@ -51,56 +51,77 @@ composer require codesaur/template
 
 ---
 
-## Ашиглах жишээ 1 - MemoryTemplate (simple)
+## Ашиглах жишээ 1 - MemoryTemplate
 
-```
+MemoryTemplate одоо бүрэн engine-тэй - if, for, filter, function бүгдийг дэмжинэ:
+
+```php
 use codesaur\Template\MemoryTemplate;
 
+$template = new MemoryTemplate(
+    '{% for user in users %}{{ user.name|upper }}, {% endfor %}',
+    ['users' => [
+        ['name' => 'Narankhuu'],
+        ['name' => 'Erdenebat],
+    ]]
+);
+
+echo $template; // NARANKHUU, ERDENEBAT,
+```
+
+Энгийн placeholder жишээ:
+
+```php
 $template = new MemoryTemplate(
     'Hello, {{ user.name }}!',
     ['user' => ['name' => 'Narankhuu']]
 );
 
-echo $template;
+echo $template; // Hello, Narankhuu!
 ```
 
-Output:
+Custom function бүртгэх:
 
-```
-Hello, Narankhuu!
+```php
+$template = new MemoryTemplate('{{ link("home") }}');
+$template->addFunction('link', fn($route) => "/app/$route");
+echo $template; // /app/home
 ```
 
 ---
 
 ## Ашиглах жишээ 2 - FileTemplate
 
-```
+FileTemplate нь файлаас template уншиж MemoryTemplate-ийн engine-ээр боловсруулна:
+
+```php
 use codesaur\Template\FileTemplate;
 
 $template = new FileTemplate(__DIR__ . '/page.html', [
     'title' => 'Hello Codesaur',
-    'message' => 'This is file-based templating.'
+    'items' => ['Home', 'About', 'Contact']
 ]);
+$template->addFunction('text', fn($key) => $translations[$key] ?? $key);
 
 echo $template->output();
 ```
 
 ---
 
-## Ашиглах жишээ 3 - TwigTemplate (Bootstrap ашигласан example)
+## Ашиглах жишээ 3 - FileTemplate (Bootstrap ашигласан example)
 
 `example/index.php`:
 
-```
-use codesaur\Template\TwigTemplate;
+```php
+use codesaur\Template\FileTemplate;
 
-$template = new TwigTemplate(__DIR__ . '/example.html', [
+$template = new FileTemplate(__DIR__ . '/example.html', [
     'title' => 'Темплейтийн жишээ',
     'menu'  => ['Нүүр', 'Бидний тухай', 'Бүтээгдэхүүн', 'Холбоо барих'],
     'items' => [
         ['title' => 'Хөнгөн жинтэй', 'text' => 'Хурдтай, энгийн ажиллагаатай темплейт систем.'],
-        ['title' => 'Уян хатан', 'text' => 'Plain, File суурьтай болон Twig Template-үүдийг дэмжинэ.'],
-        ['title' => 'Хүчирхэг', 'text' => 'Nested variable, Twig filters, functions ашиглах боломжтой.'],
+        ['title' => 'Уян хатан', 'text' => 'Plain болон File суурьтай Template-үүдийг дэмжинэ.'],
+        ['title' => 'Хүчирхэг', 'text' => 'Nested variable, filters, functions ашиглах боломжтой.'],
     ]
 ]);
 
@@ -134,7 +155,6 @@ $template->render();
 <div class="container">
     <div class="text-center mb-5">
         <h1>{{ title }}</h1>
-        <p class="text-muted">TwigTemplate болон Bootstrap ашигласан энгийн, цэвэр жишээ.</p>
     </div>
 
     <div class="row g-4">
@@ -151,10 +171,6 @@ $template->render();
     </div>
 </div>
 
-<footer class="text-center text-muted mt-5 py-4">
-    <small>&copy; {{ "now"|date("Y") }} codesaur framework</small>
-</footer>
-
 </body>
 </html>
 ```
@@ -163,7 +179,7 @@ $template->render();
 
 ## Тест ажиллуулах (Running Tests)
 
-Энэ багц нь PHPUnit ашиглан бүрэн тест-тэй. Бүх тестүүдийг Composer ашиглан ажиллуулж болно (аль ч OS дээр адилхан):
+Энэ багц нь PHPUnit ашиглан бүрэн тест-тэй. Бүх тестүүдийг Composer ашиглан ажиллуулж болно:
 
 ### 1. Dependencies суулгах
 
@@ -177,117 +193,55 @@ composer install
 composer test
 ```
 
-### 3. Test coverage үүсгэх
-
-Coverage report үүсгэх (Xdebug шаардлагатай):
-
-```bash
-composer test-coverage
-```
-
-**Анхаар:** Coverage report үүсгэхийн тулд Xdebug суусан байх шаардлагатай. `php.ini` файлд дараах тохиргоо нэмнэ үү:
-
-```ini
-[xdebug]
-zend_extension=xdebug
-xdebug.mode=coverage,debug
-```
-
-Coverage report `coverage/` фолдерт үүснэ. HTML файлыг браузер дээр нээж харж болно.
-
-### 4. Тодорхой test файл эсвэл method ажиллуулах
-
-Тодорхой test файл ажиллуулах:
+### 3. Тодорхой test файл ажиллуулах
 
 ```bash
 vendor/bin/phpunit tests/MemoryTemplateTest.php
-```
-
-Тодорхой test method ажиллуулах:
-
-```bash
-vendor/bin/phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
 ```
 
 **Windows хэрэглэгчид:** `vendor/bin/phpunit`-ийг `vendor\bin\phpunit.bat` гэж солино
 
 ### Test файлууд
 
-#### Unit Tests
 - `tests/MemoryTemplateTest.php` - MemoryTemplate классын unit test
-- `tests/FileTemplateTest.php` - FileTemplate классын unit test (100% method coverage)
-- `tests/TwigTemplateTest.php` - TwigTemplate классын unit test
-
-#### Integration Tests
-- `tests/Integration/TemplateIntegrationTest.php` - Template classes-ийн integration test
-  - Бодит файл системтэй ажиллах тест
-  - Олон template файлууд хамтдаа ажиллах тест
-  - Real-world scenarios тест
-  - Template inheritance chain тест
-
-#### Performance Tests
+- `tests/EngineTest.php` - Template engine-ийн unit test (if, for, filter, macro)
+- `tests/Integration/TemplateIntegrationTest.php` - Integration test
 - `tests/PerformanceTest.php` - Performance тестүүд
-  - Том template-үүдтэй ажиллах performance тест
-  - Олон хувьсагчтай template-үүдийн performance тест
-  - Гүн nested хувьсагчтай template-үүдийн performance тест
-  - Олон дараалсан render-ийн performance тест
-
-#### Memory Tests
 - `tests/MemoryTest.php` - Memory usage тестүүд
-  - Том template-үүдийн memory usage тест
-  - Олон template instance-ийн memory usage тест
-  - Гүн nested хувьсагчтай template-үүдийн memory usage тест
-  - Олон дараалсан render-ийн memory usage тест
 
 ### Test статистик
 
-- **Нийт тест:** 70+ тест
-- **Assertions:** 1200+ assertions
-- **Coverage:** 98.72% line coverage, 100% method coverage (FileTemplate)
+- **Нийт тест:** 100+ тест
+- **Assertions:** 1300+ assertions
 
 ---
 
 ## API Overview
 
 ### MemoryTemplate
+
+Бүрэн template engine - if, for, filter, function, macro, expression parser бүгдийг агуулна:
+
 - `__construct(string $template = '', array $vars = [])`
-- `set(string $key, $value)`
-- `setVars(array $values)`
-- `get(string $key)`
-- `getVars(): array`
-- `output(): string`
+- `set(string $key, $value)` / `setVars(array $values)` / `get(string $key)` / `getVars(): array`
+- `source(string $html)` / `getSource(): string`
+- `output(): string` / `render()` / `__toString()`
+- `addFilter(string, callable)` / `addFunction(string, callable)`
 
 ### FileTemplate
-- MemoryTemplate API-г бүхэлд нь өвлөж авна
-- `file(string $filepath)`
-- `getFileSource(): string`
-- `output(): string`
 
-### TwigTemplate
-- FileTemplate-г өргөтгөнө
-- Нэмэлт API:
-  - `getEnvironment(): Environment`
-  - `addGlobal(string $name, $value)`
-  - `addFilter(TwigFilter $filter)`
-  - `addFunction(TwigFunction $function)`
+MemoryTemplate-ийн бүх API-г өвлөж авна + файл удирдлага:
+
+- `file(string $filepath)` / `getFileName(): string`
+- `getFileSource(): string`
+- `output(): string` (файлаас уншиж compile хийнэ)
 
 ---
 
 ## Баримт бичиг (Documentation)
 
-Энэ багц нь дараах баримт бичгүүдтэй:
-
-- **[API](api.md)** - Бүрэн API баримт бичиг (PHPDoc-уудаас Cursor AI ашиглан автоматаар үүсгэсэн)
-  - Бүх класс, метод, параметр, return type-уудын дэлгэрэнгүй тайлбар
-  - Exception reference
-  - Ашиглалтын жишээнүүд
-  - Best practices
-  
-- **[REVIEW](review.md)** - Шалгалтын тайлан (Cursor AI ашиглан үүсгэсэн)
-  - Код сайжруулалтын тайлбар
-  - Test coverage report
-  - Code quality assessment
-  - Metrics болон дүгнэлт
+- **[API](api.md)** - Бүрэн API баримт бичиг
+- **[REVIEW](review.md)** - Шалгалтын тайлан
 
 ---
 
@@ -305,5 +259,5 @@ vendor/bin/phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTe
 
 ## Зохиогч
 
-**Narankhuu**  
-https://github.com/codesaur  
+**Narankhuu**
+https://github.com/codesaur

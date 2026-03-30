@@ -12,37 +12,37 @@
 
 ## 1. Монгол тайлбар
 
-Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой template engine.
+Бие даасан PHP template engine. Хөгжлийн явцад Twig template engine-ийн синтакс, дизайн загвараас санаа авч чадамжуудаа өргөжүүлсэн.
 
-`codesaur/template` нь **codesaur ecosystem**-ийн нэг хэсэг бөгөөд энгийн
-текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл
-дэмждэг минимал, өргөтгөх боломжтой PHP template engine юм.
+`codesaur/template` нь **codesaur ecosystem**-ийн нэг хэсэг бөгөөд
+энгийн текст-суурьтай темплейтээс эхлээд if/for/macro/filter бүхий
+хүчирхэг темплейт хүртэл дэмждэг минимал PHP template engine юм.
 
-Багц нь дараах 3 үндсэн class-аас бүрдэнэ:
+Багц нь дараах 2 үндсэн class-аас бүрдэнэ:
 
-- **MemoryTemplate** - энгийн {{key}} placeholder-той lightweight engine  
-- **FileTemplate** - файл суурьтай template loader  
-- **TwigTemplate** - Twig engine-тэй бүрэн интеграцлагдсан advanced renderer  
+- **MemoryTemplate** - бүрэн template engine (if, for, filter, function, macro, expression parser)
+- **FileTemplate** - файлын системээс template уншиж рэндэрлэх (MemoryTemplate-ийг өргөтгөнө)
 
 ### Дэлгэрэнгүй мэдээлэл
 
 - [Бүрэн танилцуулга](docs/mn/README.md) - Суурилуулалт, хэрэглээ, жишээнүүд
-- [API тайлбар](docs/mn/api.md) - Бүх метод, exception-үүдийн тайлбар
+- [API тайлбар](docs/mn/api.md) - Бүх метод, exception-уудийн тайлбар
 - [Шалгалтын тайлан](docs/mn/review.md) - Код шалгалтын тайлан
 
 ---
 
 ## 2. English description
 
-A minimal, extensible template engine that supports everything from simple text-based templates to powerful templates written with Twig.
+A self-contained PHP template engine. During its evolution, adopted syntax and design patterns inspired by Twig.
 
-`codesaur/template` is part of the **codesaur ecosystem** and is a minimal, extensible PHP template engine that supports everything from simple text-based templates to powerful templates written with Twig.
+`codesaur/template` is part of the **codesaur ecosystem** - a minimal PHP
+template engine supporting everything from simple text placeholders to
+powerful templates with if/for/macro/filter syntax.
 
-The package consists of the following 3 core classes:
+The package consists of 2 core classes:
 
-- **MemoryTemplate** - lightweight engine with simple {{key}} placeholders  
-- **FileTemplate** - file-based template loader  
-- **TwigTemplate** - advanced renderer fully integrated with Twig engine  
+- **MemoryTemplate** - full template engine (if, for, filter, function, macro, expression parser)
+- **FileTemplate** - file-based template loader (extends MemoryTemplate)
 
 ### Documentation
 
@@ -56,9 +56,8 @@ The package consists of the following 3 core classes:
 
 ### Requirements
 
-- PHP **8.2.1+** (JSON extension is included by default)
+- PHP **8.2.1+** (json, mbstring extensions)
 - Composer
-- Optional: `twig/twig` (^3.22.2) - Required only for TwigTemplate
 
 ### Installation
 
@@ -73,15 +72,35 @@ composer require codesaur/template
 ```php
 use codesaur\Template\MemoryTemplate;
 
-// Энгийн жишээ / Simple example
-$template = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
-echo $template; // Output: "Hello, World!"
+// Бүрэн engine - if, for, filter, function бүгд дэмжинэ
+$page = new MemoryTemplate(
+    '{% for item in items %}<li>{{ item|upper }}</li>{% endfor %}',
+    ['items' => ['a', 'b', 'c']]
+);
+echo $page;
+```
 
-// Олон түвшний хувьсагч / Nested variables
-$template = new MemoryTemplate('Email: {{ user.email }}', [
-    'user' => ['email' => 'test@example.com']
+```php
+use codesaur\Template\FileTemplate;
+
+// Файл суурьтай template
+$page = new FileTemplate('page.html', [
+    'title' => 'Hello',
+    'items' => ['a', 'b', 'c']
 ]);
-echo $template; // Output: "Email: test@example.com"
+$page->addFunction('link', fn($route) => "/app/$route");
+echo $page;
+```
+
+```html
+<!-- page.html -->
+<h1>{{ title }}</h1>
+<a href="{{ link('home') }}">Home</a>
+<ul>
+{% for item in items %}
+    <li>{{ item }}</li>
+{% endfor %}
+</ul>
 ```
 
 ### Running Tests
@@ -89,11 +108,7 @@ echo $template; // Output: "Email: test@example.com"
 Тест ажиллуулах / Run tests:
 
 ```bash
-# Бүх тестүүдийг ажиллуулах / Run all tests
 composer test
-
-# Coverage-тэй тест ажиллуулах / Run tests with coverage
-composer test:coverage
 ```
 
 ---
@@ -113,8 +128,8 @@ This project is licensed under the MIT License.
 
 ## Author
 
-**Narankhuu**  
+**Narankhuu**
 codesaur@gmail.com  
- https://github.com/codesaur
+https://github.com/codesaur  
 
 **codesaur Ecosystem:** https://codesaur.net

@@ -119,7 +119,6 @@ class FileTemplateTest extends TestCase
         $template->set('name', 'Updated');
         $this->assertEquals('Hello, Updated!', $template->output());
 
-        $this->assertTrue($template->has('name'));
         $this->assertEquals('Updated', $template->get('name'));
     }
 

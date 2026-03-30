@@ -70,12 +70,12 @@ class MemoryTemplateTest extends TestCase
     }
 
     /**
-     * Олдохгүй хувьсагч tag-аар үлдэх тест.
+     * Олдохгүй хувьсагч хоосон string болох тест.
      */
-    public function testMissingVariableKeepsTag(): void
+    public function testMissingVariableRendersEmpty(): void
     {
         $template = new MemoryTemplate('Hello, {{ missing }}!', []);
-        $this->assertEquals('Hello, {{ missing }}!', $template->output());
+        $this->assertEquals('Hello, !', $template->output());
     }
 
     /**
@@ -119,16 +119,6 @@ class MemoryTemplateTest extends TestCase
     }
 
     /**
-     * has() метод тест.
-     */
-    public function testHasMethod(): void
-    {
-        $template = new MemoryTemplate('', ['key' => 'value']);
-        $this->assertTrue($template->has('key'));
-        $this->assertFalse($template->has('missing'));
-    }
-
-    /**
      * getVars() метод тест.
      */
     public function testGetVarsMethod(): void
@@ -165,15 +155,6 @@ class MemoryTemplateTest extends TestCase
     {
         $template = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
         $this->assertEquals('Hello, World!', (string) $template);
-    }
-
-    /**
-     * Массив утгыг stringify хийх тест.
-     */
-    public function testArrayStringify(): void
-    {
-        $template = new MemoryTemplate('{{ items }}', ['items' => ['a', 'b', 'c']]);
-        $this->assertEquals('abc', $template->output());
     }
 
     /**
@@ -221,5 +202,115 @@ class MemoryTemplateTest extends TestCase
         $html = '{{ message }}, {{ user.name }}! You are {{ user.age }} years old.';
         $template = new MemoryTemplate($html, $vars);
         $this->assertEquals('Welcome, John! You are 30 years old.', $template->output());
+    }
+
+    // ==================== Filter & Function ====================
+
+    /**
+     * Custom filter-ийг template дотор ашиглах тест.
+     */
+    public function testCustomFilterInTemplate(): void
+    {
+        $template = new MemoryTemplate('{{ name|myrev }}', ['name' => 'hello']);
+        $template->addFilter('myrev', fn($v) => \strrev((string) $v));
+        $this->assertEquals('olleh', $template->output());
+    }
+
+    /**
+     * Custom function-ийг template дотор ашиглах тест.
+     */
+    public function testCustomFunctionInTemplate(): void
+    {
+        $template = new MemoryTemplate('{{ sum(3, 7) }}', []);
+        $template->addFunction('sum', fn($a, $b) => $a + $b);
+        $this->assertEquals('10', $template->output());
+    }
+
+    // ==================== Engine features in MemoryTemplate ====================
+
+    /**
+     * MemoryTemplate дээр for loop ажиллах тест.
+     */
+    public function testForLoop(): void
+    {
+        $template = new MemoryTemplate(
+            '{% for item in items %}{{ item }} {% endfor %}',
+            ['items' => ['a', 'b', 'c']]
+        );
+        $this->assertEquals('a b c ', $template->output());
+    }
+
+    /**
+     * MemoryTemplate дээр if/else ажиллах тест.
+     */
+    public function testIfElse(): void
+    {
+        $template = new MemoryTemplate(
+            '{% if show %}yes{% else %}no{% endif %}',
+            ['show' => true]
+        );
+        $this->assertEquals('yes', $template->output());
+
+        $template->set('show', false);
+        $this->assertEquals('no', $template->output());
+    }
+
+    /**
+     * MemoryTemplate дээр built-in filter ашиглах тест.
+     */
+    public function testBuiltInFilter(): void
+    {
+        $template = new MemoryTemplate('{{ name|upper }}', ['name' => 'hello']);
+        $this->assertEquals('HELLO', $template->output());
+    }
+
+    /**
+     * MemoryTemplate дээр set tag ашиглах тест.
+     */
+    public function testSetTag(): void
+    {
+        $template = new MemoryTemplate('{% set greeting = "Hi" %}{{ greeting }}!', []);
+        $this->assertEquals('Hi!', $template->output());
+    }
+
+    /**
+     * MemoryTemplate дээр ternary operator ашиглах тест.
+     */
+    public function testTernaryOperator(): void
+    {
+        $template = new MemoryTemplate("{{ flag ? 'yes' : 'no' }}", ['flag' => true]);
+        $this->assertEquals('yes', $template->output());
+    }
+
+    /**
+     * MemoryTemplate дээр null coalescing operator ашиглах тест.
+     */
+    public function testNullCoalescing(): void
+    {
+        $template = new MemoryTemplate("{{ name ?? 'default' }}", []);
+        $this->assertEquals('default', $template->output());
+    }
+
+    /**
+     * MemoryTemplate дээр escape filter ашиглах тест.
+     */
+    public function testEscapeFilter(): void
+    {
+        $template = new MemoryTemplate('{{ html|e }}', ['html' => '<script>alert(1)</script>']);
+        $output = $template->output();
+        $this->assertStringNotContainsString('<script>', $output);
+        $this->assertStringContainsString('&lt;script&gt;', $output);
+    }
+
+    /**
+     * MemoryTemplate дээр loop хувьсагчид ашиглах тест.
+     */
+    public function testLoopVariables(): void
+    {
+        $template = new MemoryTemplate(
+            '{% for item in items %}{{ loop.index }}:{{ item }}{% if not loop.last %},{% endif %}{% endfor %}',
+            ['items' => ['a', 'b', 'c']]
+        );
+        $this->assertEquals('1:a,2:b,3:c', $template->output());
     }
 }

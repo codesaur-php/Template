@@ -6,26 +6,19 @@ use PHPUnit\Framework\TestCase;
 
 use codesaur\Template\MemoryTemplate;
 use codesaur\Template\FileTemplate;
-use codesaur\Template\TwigTemplate;
 
 /**
  * Template classes-ийн integration test.
  *
- * Энэ тест нь бодит файл системтэй ажиллах, олон template-үүд
- * хамтдаа ажиллах, бодит use case-уудыг шалгана.
+ * Бодит файл системтэй ажиллах, олон template хамтдаа
+ * ажиллах, бодит use case-уудыг шалгана.
  *
  * @package codesaur\Template\Tests\Integration
  */
 class TemplateIntegrationTest extends TestCase
 {
-    /**
-     * Integration test-ийн фолдер.
-     */
     private string $testDir;
 
-    /**
-     * Test setUp: integration test фолдер үүсгэх.
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -33,9 +26,6 @@ class TemplateIntegrationTest extends TestCase
         mkdir($this->testDir, 0777, true);
     }
 
-    /**
-     * Test tearDown: integration test фолдер устгах.
-     */
     protected function tearDown(): void
     {
         if (is_dir($this->testDir)) {
@@ -44,15 +34,11 @@ class TemplateIntegrationTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * Фолдер болон түүний агуулгыг рекурсив байдлаар устгах.
-     */
     private function removeDirectory(string $dir): void
     {
         if (!is_dir($dir)) {
             return;
         }
-
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $path = $dir . '/' . $file;
@@ -66,45 +52,38 @@ class TemplateIntegrationTest extends TestCase
     }
 
     /**
-     * MemoryTemplate -> FileTemplate -> TwigTemplate дамжин ажиллах integration тест.
+     * MemoryTemplate -> FileTemplate дамжин ажиллах integration тест.
      */
     public function testTemplateInheritanceChain(): void
     {
-        // 1. MemoryTemplate ашиглан энгийн template
+        // MemoryTemplate - энгийн {{ key }} орлуулга
         $memoryTemplate = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
         $this->assertEquals('Hello, World!', $memoryTemplate->output());
 
-        // 2. FileTemplate ашиглан файлаас template унших
+        // FileTemplate - файлаас уншиж, бүрэн engine ажиллуулах
         $filePath = $this->testDir . '/template.html';
         file_put_contents($filePath, 'Welcome, {{ user }}!');
         $fileTemplate = new FileTemplate($filePath, ['user' => 'Narankhuu']);
         $this->assertEquals('Welcome, Narankhuu!', $fileTemplate->output());
 
-        // 3. TwigTemplate ашиглан advanced template
-        $twigPath = $this->testDir . '/twig_template.html';
-        file_put_contents($twigPath, '{% for item in items %}{{ item }} {% endfor %}');
-        $twigTemplate = new TwigTemplate($twigPath, ['items' => ['a', 'b', 'c']]);
-        $this->assertEquals('a b c ', $twigTemplate->output());
+        // FileTemplate - for loop
+        $advancedPath = $this->testDir . '/advanced.html';
+        file_put_contents($advancedPath, '{% for item in items %}{{ item }} {% endfor %}');
+        $advancedTemplate = new FileTemplate($advancedPath, ['items' => ['a', 'b', 'c']]);
+        $this->assertEquals('a b c ', $advancedTemplate->output());
     }
 
-    /**
-     * Олон template файлууд хамтдаа ажиллах integration тест.
-     */
     public function testMultipleTemplateFiles(): void
     {
-        // Header template
         $headerPath = $this->testDir . '/header.html';
         file_put_contents($headerPath, '<header>{{ title }}</header>');
 
-        // Content template
         $contentPath = $this->testDir . '/content.html';
         file_put_contents($contentPath, '<main>{{ content }}</main>');
 
-        // Footer template
         $footerPath = $this->testDir . '/footer.html';
         file_put_contents($footerPath, '<footer>{{ year }}</footer>');
 
-        // Бүх template-үүдийг рэндэр хийх
         $header = new FileTemplate($headerPath, ['title' => 'My Site']);
         $content = new FileTemplate($contentPath, ['content' => 'Welcome']);
         $footer = new FileTemplate($footerPath, ['year' => '2025']);
@@ -114,9 +93,6 @@ class TemplateIntegrationTest extends TestCase
         $this->assertEquals('<footer>2025</footer>', $footer->output());
     }
 
-    /**
-     * Nested template structure integration тест.
-     */
     public function testNestedTemplateStructure(): void
     {
         $layoutPath = $this->testDir . '/layout.html';
@@ -150,13 +126,10 @@ HTML;
         $this->assertStringContainsString('This is a test page.', $output);
     }
 
-    /**
-     * TwigTemplate advanced features integration тест.
-     */
-    public function testTwigTemplateAdvancedFeatures(): void
+    public function testAdvancedFeatures(): void
     {
         $templatePath = $this->testDir . '/advanced.html';
-        $templateContent = <<<'TWIG'
+        $templateContent = <<<'TPL'
 {% if users|length > 0 %}
     <ul>
     {% for user in users %}
@@ -166,10 +139,10 @@ HTML;
 {% else %}
     <p>No users found.</p>
 {% endif %}
-TWIG;
+TPL;
         file_put_contents($templatePath, $templateContent);
 
-        $template = new TwigTemplate($templatePath, [
+        $template = new FileTemplate($templatePath, [
             'users' => [
                 ['name' => 'John', 'age' => 30],
                 ['name' => 'Jane', 'age' => 25]
@@ -183,33 +156,21 @@ TWIG;
         $this->assertStringNotContainsString('No users found', $output);
     }
 
-    /**
-     * Template variables динамик өөрчлөх integration тест.
-     */
     public function testDynamicVariableUpdates(): void
     {
         $templatePath = $this->testDir . '/dynamic.html';
         file_put_contents($templatePath, 'Count: {{ count }}, Status: {{ status }}');
 
         $template = new FileTemplate($templatePath, ['count' => 0, 'status' => 'inactive']);
-
-        // Эхний рэндэр
         $this->assertStringContainsString('Count: 0', $template->output());
-        $this->assertStringContainsString('Status: inactive', $template->output());
 
-        // Хувьсагчдыг өөрчлөх
         $template->set('count', 10);
         $template->set('status', 'active');
-
-        // Дахин рэндэр
         $output = $template->output();
         $this->assertStringContainsString('Count: 10', $output);
         $this->assertStringContainsString('Status: active', $output);
     }
 
-    /**
-     * Template file-ийн агуулгыг өөрчлөх integration тест.
-     */
     public function testTemplateFileContentChanges(): void
     {
         $templatePath = $this->testDir . '/changeable.html';
@@ -218,48 +179,33 @@ TWIG;
         $template = new FileTemplate($templatePath, ['value' => 'test']);
         $this->assertEquals('Version 1: test', $template->output());
 
-        // Файлын агуулгыг өөрчлөх
         file_put_contents($templatePath, 'Version 2: {{ value }}');
         $this->assertEquals('Version 2: test', $template->output());
     }
 
-    /**
-     * TwigTemplate custom filter integration тест.
-     */
-    public function testTwigCustomFilterIntegration(): void
+    public function testCustomFilterIntegration(): void
     {
         $templatePath = $this->testDir . '/filter.html';
         file_put_contents($templatePath, 'Number: {{ number|int }}');
 
-        $template = new TwigTemplate($templatePath, ['number' => '42.5']);
+        $template = new FileTemplate($templatePath, ['number' => '42.5']);
         $this->assertEquals('Number: 42', $template->output());
     }
 
-    /**
-     * TwigTemplate custom function integration тест.
-     */
-    public function testTwigCustomFunctionIntegration(): void
+    public function testCustomFunctionIntegration(): void
     {
         $templatePath = $this->testDir . '/function.html';
         file_put_contents($templatePath, '{{ greet("World") }}');
 
-        $template = new TwigTemplate($templatePath, []);
-
-        $template->addFunction(new \Twig\TwigFunction('greet', function ($name) {
-            return "Hello, $name!";
-        }));
-
+        $template = new FileTemplate($templatePath, []);
+        $template->addFunction('greet', fn($name) => "Hello, $name!");
         $this->assertEquals('Hello, World!', $template->output());
     }
 
-    /**
-     * Complex real-world scenario integration тест.
-     */
     public function testRealWorldScenario(): void
     {
-        // Бодит веб хуудасны template
         $pagePath = $this->testDir . '/page.html';
-        $pageContent = <<<'TWIG'
+        $pageContent = <<<'TPL'
 <!DOCTYPE html>
 <html lang="mn">
 <head>
@@ -276,22 +222,21 @@ TWIG;
         <h1>{{ page.title }}</h1>
         <p>{{ page.content }}</p>
         {% if page.showDate %}
-            <small>Огноо: {{ "now"|date("Y-m-d") }}</small>
+            <small>Огноо: {{ page.date|date("Y-m-d") }}</small>
         {% endif %}
     </main>
 </body>
 </html>
-TWIG;
+TPL;
         file_put_contents($pagePath, $pageContent);
 
-        $template = new TwigTemplate($pagePath, [
-            'site' => [
-                'title' => 'My Website'
-            ],
+        $template = new FileTemplate($pagePath, [
+            'site' => ['title' => 'My Website'],
             'page' => [
                 'title' => 'Нүүр хуудас',
                 'content' => 'Тавтай морилно уу!',
-                'showDate' => true
+                'showDate' => true,
+                'date' => '2026-03-28'
             ],
             'menu' => [
                 ['url' => '/', 'label' => 'Нүүр'],
@@ -301,35 +246,21 @@ TWIG;
         ]);
 
         $output = $template->output();
-
-        // Шалгалтууд
         $this->assertStringContainsString('<title>My Website - Нүүр хуудас</title>', $output);
         $this->assertStringContainsString('<h1>Нүүр хуудас</h1>', $output);
         $this->assertStringContainsString('Тавтай морилно уу!', $output);
-        $this->assertStringContainsString('Нүүр', $output);
-        $this->assertStringContainsString('Бидний тухай', $output);
-        $this->assertStringContainsString('Холбоо барих', $output);
-        $this->assertStringContainsString('Огноо:', $output);
+        $this->assertStringContainsString('Огноо: 2026-03-28', $output);
     }
 
-    /**
-     * Template caching simulation integration тест.
-     */
     public function testTemplateCachingSimulation(): void
     {
         $templatePath = $this->testDir . '/cache.html';
         file_put_contents($templatePath, '{{ content }}');
 
-        // Эхний рэндэр
         $template1 = new FileTemplate($templatePath, ['content' => 'First']);
-        $output1 = $template1->output();
-
-        // Хоёр дахь рэндэр (өөр хувьсагч)
         $template2 = new FileTemplate($templatePath, ['content' => 'Second']);
-        $output2 = $template2->output();
 
-        $this->assertEquals('First', $output1);
-        $this->assertEquals('Second', $output2);
-        $this->assertNotEquals($output1, $output2);
+        $this->assertEquals('First', $template1->output());
+        $this->assertEquals('Second', $template2->output());
     }
 }

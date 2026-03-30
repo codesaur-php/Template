@@ -1,14 +1,13 @@
-# codesaur/template  
+# codesaur/template
 
-A minimal, extensible template engine that supports everything from simple text-based templates to powerful templates written with Twig.
+A self-contained PHP template engine. During its evolution, adopted syntax and design patterns inspired by Twig.
 
-`codesaur/template` is part of the **codesaur ecosystem** and is a minimal, extensible PHP template engine that supports everything from simple text-based templates to powerful templates written with Twig.
+`codesaur/template` is part of the **codesaur ecosystem** and provides everything from simple text-based templates to powerful templates with control structures, filters, functions, macros, and expression parsing - all without any external dependencies.
 
-The package consists of the following 3 core classes:
+The package consists of 2 core classes:
 
-- **MemoryTemplate** - lightweight engine with simple {{key}} placeholders  
-- **FileTemplate** - file-based template loader  
-- **TwigTemplate** - advanced renderer fully integrated with Twig engine  
+- **MemoryTemplate** - full template engine (if, for, filter, function, macro, expression parser, 33 built-in filters)
+- **FileTemplate** - file-based template loader wrapper (extends MemoryTemplate)
 
 ---
 
@@ -28,14 +27,15 @@ CI/CD status can be viewed on the [GitHub Actions](https://github.com/codesaur-p
 
 ## Features
 
-- Supports all whitespace/no-whitespace formats such as `{{ key }}`, `{{key}}`, `{{ user.profile.email }}`  
-- Nested variable support (multi-level arrays)  
-- Perfect override structure - Memory -> File -> Twig  
-- Full support for Twig filters, functions, globals  
-- Zero external dependencies (Twig is only required when using TwigTemplate)  
+- Supports all whitespace/no-whitespace formats such as `{{ key }}`, `{{key}}`, `{{ user.profile.email }}`
+- Nested variable support (multi-level arrays)
+- Full template syntax: if/elseif/else, for loops, macros, filters, functions, expressions
+- 33 built-in filters (e, escape, date, length, keys, slice, split, merge, json_encode, number_format, capitalize, upper, lower, default, round, nl2br, url_encode, format, first, last, etc.)
+- Custom filter/function registration: `addFilter()`, `addFunction()`
+- MemoryTemplate runs the full engine. FileTemplate is just a file-reading wrapper
 - Framework-agnostic, fully compatible with codesaur, Laravel, Symfony, Slim and all other PHP frameworks
-- Complete PHPDoc documentation (all methods, parameters, return types are clear)
-- Unit, Integration, Performance and Memory tests (70+ tests, 1200+ assertions)
+- Complete PHPDoc documentation
+- Unit, Integration, Performance and Memory tests (95 tests, 1267 assertions)
 
 ---
 
@@ -49,56 +49,77 @@ composer require codesaur/template
 
 ---
 
-## Usage Example 1 - MemoryTemplate (simple)
+## Usage Example 1 - MemoryTemplate
 
-```
+MemoryTemplate now includes the full engine - if, for, filter, function all work directly:
+
+```php
 use codesaur\Template\MemoryTemplate;
 
+$template = new MemoryTemplate(
+    '{% for user in users %}{{ user.name|upper }}, {% endfor %}',
+    ['users' => [
+        ['name' => 'Narankhuu'],
+        ['name' => 'Erdenebat'],
+    ]]
+);
+
+echo $template; // NARANKHUU, ERDENEBAT,
+```
+
+Simple placeholder example:
+
+```php
 $template = new MemoryTemplate(
     'Hello, {{ user.name }}!',
     ['user' => ['name' => 'Narankhuu']]
 );
 
-echo $template;
+echo $template; // Hello, Narankhuu!
 ```
 
-Output:
+Register custom function:
 
-```
-Hello, Narankhuu!
+```php
+$template = new MemoryTemplate('{{ link("home") }}');
+$template->addFunction('link', fn($route) => "/app/$route");
+echo $template; // /app/home
 ```
 
 ---
 
 ## Usage Example 2 - FileTemplate
 
-```
+FileTemplate reads from files and processes through MemoryTemplate's engine:
+
+```php
 use codesaur\Template\FileTemplate;
 
 $template = new FileTemplate(__DIR__ . '/page.html', [
     'title' => 'Hello Codesaur',
-    'message' => 'This is file-based templating.'
+    'items' => ['Home', 'About', 'Contact']
 ]);
+$template->addFunction('text', fn($key) => $translations[$key] ?? $key);
 
 echo $template->output();
 ```
 
 ---
 
-## Usage Example 3 - TwigTemplate (Bootstrap example)
+## Usage Example 3 - FileTemplate (Bootstrap example)
 
 `example/index.php`:
 
-```
-use codesaur\Template\TwigTemplate;
+```php
+use codesaur\Template\FileTemplate;
 
-$template = new TwigTemplate(__DIR__ . '/example.html', [
+$template = new FileTemplate(__DIR__ . '/example.html', [
     'title' => 'Template Example',
     'menu'  => ['Home', 'About', 'Products', 'Contact'],
     'items' => [
         ['title' => 'Lightweight', 'text' => 'Fast, simple template system.'],
-        ['title' => 'Flexible', 'text' => 'Supports Plain, File-based and Twig Templates.'],
-        ['title' => 'Powerful', 'text' => 'Can use nested variables, Twig filters, functions.'],
+        ['title' => 'Flexible', 'text' => 'Supports Plain and File-based Templates.'],
+        ['title' => 'Powerful', 'text' => 'Can use nested variables, filters, functions.'],
     ]
 ]);
 
@@ -132,7 +153,6 @@ $template->render();
 <div class="container">
     <div class="text-center mb-5">
         <h1>{{ title }}</h1>
-        <p class="text-muted">A simple, clean example using TwigTemplate and Bootstrap.</p>
     </div>
 
     <div class="row g-4">
@@ -149,10 +169,6 @@ $template->render();
     </div>
 </div>
 
-<footer class="text-center text-muted mt-5 py-4">
-    <small>&copy; {{ "now"|date("Y") }} codesaur framework</small>
-</footer>
-
 </body>
 </html>
 ```
@@ -161,7 +177,7 @@ $template->render();
 
 ## Running Tests
 
-This package includes complete tests using PHPUnit. All tests can be run using Composer (works the same on any OS):
+This package includes complete tests using PHPUnit. All tests can be run using Composer:
 
 ### 1. Install Dependencies
 
@@ -175,117 +191,55 @@ composer install
 composer test
 ```
 
-### 3. Generate Test Coverage
-
-Generate coverage report (Xdebug required):
-
-```bash
-composer test-coverage
-```
-
-**Note:** Xdebug must be installed to generate coverage reports. Add the following configuration to your `php.ini` file:
-
-```ini
-[xdebug]
-zend_extension=xdebug
-xdebug.mode=coverage,debug
-```
-
-Coverage report will be generated in the `coverage/` folder. You can open the HTML file in a browser.
-
-### 4. Run Specific Test File or Method
-
-Run specific test file:
+### 3. Run Specific Test File
 
 ```bash
 vendor/bin/phpunit tests/MemoryTemplateTest.php
-```
-
-Run specific test method:
-
-```bash
-vendor/bin/phpunit --filter testSimpleVariableReplacement tests/MemoryTemplateTest.php
 ```
 
 **Windows users:** Replace `vendor/bin/phpunit` with `vendor\bin\phpunit.bat`
 
 ### Test Files
 
-#### Unit Tests
 - `tests/MemoryTemplateTest.php` - MemoryTemplate class unit tests
-- `tests/FileTemplateTest.php` - FileTemplate class unit tests (100% method coverage)
-- `tests/TwigTemplateTest.php` - TwigTemplate class unit tests
-
-#### Integration Tests
-- `tests/Integration/TemplateIntegrationTest.php` - Template classes integration tests
-  - Tests working with real file system
-  - Tests working with multiple template files together
-  - Real-world scenarios tests
-  - Template inheritance chain tests
-
-#### Performance Tests
+- `tests/EngineTest.php` - Template engine unit tests (if, for, filter, macro)
+- `tests/Integration/TemplateIntegrationTest.php` - Integration tests
 - `tests/PerformanceTest.php` - Performance tests
-  - Performance tests with large templates
-  - Performance tests with many variables
-  - Performance tests with deeply nested variables
-  - Performance tests with multiple sequential renders
-
-#### Memory Tests
 - `tests/MemoryTest.php` - Memory usage tests
-  - Memory usage tests with large templates
-  - Memory usage tests with multiple template instances
-  - Memory usage tests with deeply nested variables
-  - Memory usage tests with multiple sequential renders
 
 ### Test Statistics
 
-- **Total Tests:** 70+ tests
-- **Assertions:** 1200+ assertions
-- **Coverage:** 98.72% line coverage, 100% method coverage (FileTemplate)
+- **Total Tests:** 100+ tests
+- **Assertions:** 1300+ assertions
 
 ---
 
 ## API Overview
 
 ### MemoryTemplate
+
+Full template engine - includes if, for, filter, function, macro, and expression parser:
+
 - `__construct(string $template = '', array $vars = [])`
-- `set(string $key, $value)`
-- `setVars(array $values)`
-- `get(string $key)`
-- `getVars(): array`
-- `output(): string`
+- `set(string $key, $value)` / `setVars(array $values)` / `get(string $key)` / `getVars(): array`
+- `source(string $html)` / `getSource(): string`
+- `output(): string` / `render()` / `__toString()`
+- `addFilter(string, callable)` / `addFunction(string, callable)`
 
 ### FileTemplate
-- Inherits all MemoryTemplate API
-- `file(string $filepath)`
-- `getFileSource(): string`
-- `output(): string`
 
-### TwigTemplate
-- Extends FileTemplate
-- Additional API:
-  - `getEnvironment(): Environment`
-  - `addGlobal(string $name, $value)`
-  - `addFilter(TwigFilter $filter)`
-  - `addFunction(TwigFunction $function)`
+Inherits all MemoryTemplate API + file management:
+
+- `file(string $filepath)` / `getFileName(): string`
+- `getFileSource(): string`
+- `output(): string` (reads file and compiles)
 
 ---
 
 ## Documentation
 
-This package includes the following documentation:
-
-- **[API](api.md)** - Complete API documentation (automatically generated from PHPDoc using Cursor AI)
-  - Detailed description of all classes, methods, parameters, return types
-  - Exception reference
-  - Usage examples
-  - Best practices
-  
-- **[REVIEW](review.md)** - Review report (generated using Cursor AI)
-  - Code improvement descriptions
-  - Test coverage report
-  - Code quality assessment
-  - Metrics and conclusions
+- **[API](api.md)** - Complete API documentation
+- **[REVIEW](review.md)** - Code review report
 
 ---
 
@@ -303,5 +257,5 @@ This project is licensed under the MIT license.
 
 ## Author
 
-**Narankhuu**  
-https://github.com/codesaur  
+**Narankhuu**
+https://github.com/codesaur

@@ -4,36 +4,24 @@ namespace codesaur\Template;
 
 /**
  * FileTemplate класс нь MemoryTemplate-ийг өргөтгөж,
- * темплейтийг файлын системээс уншиж рэндэрлэх боломж олгоно.
- *
- * Онцлог:
- * - Файл замыг зааж өгөөд template-г файлтай нь холбож ашиглана
- * - Файл уншиж байх үед filename, file_exists, permission зэрэг алдааг шалгана
- * - FileTemplate -> MemoryTemplate compile() механизмыг ашиглан финал HTML гаргана
+ * файлын системээс template уншиж рэндэрлэх боломж олгоно.
  *
  * @package codesaur\Template
  * @author Narankhuu
- * @since 1.0.0
  */
 class FileTemplate extends MemoryTemplate
 {
-    /**
-     * Рэндэрлэх гэж буй темплейт файлын бүрэн зам.
-     *
-     * @var string
-     */
+    /** @var string Темплейт файлын зам */
     protected string $_file = '';
 
     /**
-     * FileTemplate конструктор.
-     *
-     * @param string $template Темплейт файлын зам (хоосон байж болно, дараа file() методоор тохируулна)
-     * @param array  $vars     Темплейтэд дамжуулах хувьсагчдын массив
+     * @param string $template Темплейт файлын зам (хоосон байж болно)
+     * @param array<string, mixed> $vars Темплейтэд дамжуулах хувьсагчид
      */
     public function __construct(string $template = '', array $vars = [])
     {
         parent::__construct('', $vars);
-        
+
         if (!empty($template)) {
             $this->file($template);
         }
@@ -42,10 +30,7 @@ class FileTemplate extends MemoryTemplate
     /**
      * Ашиглах темплейт файлын замыг тохируулна.
      *
-     * @param string $filepath Темплейт файлын бүрэн зам (absolute эсвэл relative path)
-     *
-     * @return void
-     *
+     * @param string $filepath Темплейт файлын бүрэн зам
      * @throws \InvalidArgumentException Файлын нэр хоосон байвал
      */
     public function file(string $filepath): void
@@ -60,7 +45,7 @@ class FileTemplate extends MemoryTemplate
     /**
      * Одоогоор тохируулсан темплейт файлын замыг буцаана.
      *
-     * @return string Темплейт файлын бүрэн зам (хоосон байж болно)
+     * @return string Темплейт файлын бүрэн зам
      */
     public function getFileName(): string
     {
@@ -70,11 +55,8 @@ class FileTemplate extends MemoryTemplate
     /**
      * Тэмплейт файлын агуулгыг уншиж буцаана.
      *
-     * Файл заагаагүй, олдохгүй эсвэл уншихад алдаа гарвал RuntimeException шидэнэ.
-     *
      * @return string Файлын HTML/текст агуулга
-     *
-     * @throws \RuntimeException Файл заагаагүй, файл олдохгүй эсвэл уншихад алдаа гарвал
+     * @throws \RuntimeException Файл заагаагүй, олдохгүй эсвэл уншихад алдаа гарвал
      */
     public function getFileSource(): string
     {
@@ -99,13 +81,9 @@ class FileTemplate extends MemoryTemplate
     }
 
     /**
-     * Тэмплейт файлыг уншиж, MemoryTemplate-ийн compile() ашиглан финал HTML буцаана.
-     *
-     * Энэ метод нь MemoryTemplate-ийн output() override хийж,
-     * файлын агуулгыг уншиж compile() руу дамжуулна.
+     * Тэмплейт файлыг уншиж compile хийн финал HTML буцаана.
      *
      * @return string Финал боловсруулсан HTML
-     *
      * @throws \RuntimeException Файл уншихад алдаа гарвал
      */
     public function output(): string

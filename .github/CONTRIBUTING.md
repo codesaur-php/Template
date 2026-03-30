@@ -61,7 +61,7 @@ composer test
 Use clear and descriptive commit messages, for example:
 
 - `fix: resolve nested variable replacement issue`
-- `feat: add custom filter support for TwigTemplate`
+- `feat: add custom filter support for MemoryTemplate`
 - `docs: update README examples`
 
 ---

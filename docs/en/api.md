@@ -1,6 +1,6 @@
 # API Documentation - codesaur/template
 
-**Last Updated:** 2026-01-08  
+**Last Updated:** 2026-03-30
 
 ---
 
@@ -9,31 +9,31 @@
 - [Overview](#overview)
 - [MemoryTemplate](#memorytemplate)
 - [FileTemplate](#filetemplate)
-- [TwigTemplate](#twigtemplate)
+- [Built-in Filters](#built-in-filters)
+- [Supported Template Syntax](#supported-template-syntax)
 - [Examples](#examples)
+- [Exception Reference](#exception-reference)
 
 ---
 
 ## Overview
 
-`codesaur/template` consists of 3 core classes:
+`codesaur/template` consists of 2 core classes:
 
-1. **MemoryTemplate** - Lightweight engine with simple placeholders
-2. **FileTemplate** - File-based template loader (extends MemoryTemplate)
-3. **TwigTemplate** - Advanced renderer fully integrated with Twig engine (extends FileTemplate)
+1. **MemoryTemplate** - Full template engine (if, for, filter, function, macro, expression parser, 33 built-in filters)
+2. **FileTemplate** - File-based template loader wrapper (extends MemoryTemplate)
 
 **Inheritance Hierarchy:**
 ```
-MemoryTemplate
-    |-- FileTemplate
-        |-- TwigTemplate
+MemoryTemplate  (full engine)
+    |-- FileTemplate  (file reader wrapper)
 ```
 
 ---
 
 ## MemoryTemplate
 
-Lightweight template engine designed to process simple HTML or text-based templates.
+Full template engine. Includes if, for, macro, filter, function, and expression parser.
 
 ### Class Signature
 
@@ -49,19 +49,23 @@ The main HTML or text source of the template.
 #### `protected array<string, mixed> $_vars`
 Array of variables to be inserted into the template.
 
+#### `protected array<string, callable> $filters`
+Registered filters.
+
+#### `protected array<string, callable> $functions`
+Registered functions.
+
 ---
 
-### Methods
+### Constructor
 
 #### `__construct(string $template = '', array $vars = [])`
 
-Constructor to create a MemoryTemplate object.
+Creates a MemoryTemplate object. Automatically registers built-in filters and functions.
 
 **Parameters:**
-- `string $template` - Initial HTML or text value of the template (optional, default: `''`)
-- `array $vars` - Array of variables to use in the template (optional, default: `[]`)
-
-**Returns:** `void`
+- `string $template` - Initial template value (default: `''`)
+- `array $vars` - Variables array (default: `[]`)
 
 **Example:**
 ```php
@@ -70,221 +74,129 @@ $template = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
 
 ---
 
-#### `__toString(): string`
-
-Returns the result of the `output()` function when the object is directly echoed.
-
-**Returns:** `string` - Processed template
-
-**Example:**
-```php
-$template = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
-echo $template; // Output: "Hello, World!"
-```
-
----
-
-#### `source(string $html): void`
-
-Sets the source HTML/text content of the template.
-
-**Parameters:**
-- `string $html` - HTML or text content
-
-**Returns:** `void`
-
-**Example:**
-```php
-$template = new MemoryTemplate();
-$template->source('<h1>{{ title }}</h1>');
-```
-
----
-
-#### `has(string $key): bool`
-
-Checks if a specific variable exists in the template.
-
-**Parameters:**
-- `string $key` - Variable key
-
-**Returns:** `bool` - Returns `true` if the variable exists, `false` otherwise
-
-**Example:**
-```php
-$template = new MemoryTemplate('', ['name' => 'John']);
-$template->has('name'); // true
-$template->has('email'); // false
-```
-
----
+### Variable Management
 
 #### `set(string $key, $value): void`
 
-Adds or updates a variable to be used in the template in name=value format.
+Add or update a variable.
 
-**Parameters:**
-- `string $key` - Variable key
-- `mixed $value` - Variable value (any type)
-
-**Returns:** `void`
-
-**Example:**
 ```php
-$template = new MemoryTemplate('{{ name }}');
 $template->set('name', 'John');
-$template->set('age', 30);
 ```
 
 ---
 
 #### `setVars(array $values): void`
 
-Adds or updates multiple variables at once.
+Add multiple variables at once.
 
-**Parameters:**
-- `array<string, mixed> $values` - Array of variables
-
-**Returns:** `void`
-
-**Example:**
 ```php
-$template = new MemoryTemplate('{{ name }} is {{ age }} years old');
-$template->setVars([
-    'name' => 'John',
-    'age' => 30
-]);
+$template->setVars(['name' => 'John', 'age' => 30]);
 ```
 
 ---
 
 #### `get(string $key): mixed`
 
-Returns the variable value by reference. Returns `null` if the variable is not found.
+Returns variable value by reference. Returns `null` if not found.
 
-**Parameters:**
-- `string $key` - Variable key
-
-**Returns:** `mixed` - Variable value or `null`
-
-**Example:**
 ```php
-$template = new MemoryTemplate('', ['name' => 'John']);
-$value = &$template->get('name'); // 'John'
-$value = 'Jane'; // Variable is updated
+$value = &$template->get('name');
 ```
 
 ---
 
 #### `getVars(): array<string, mixed>`
 
-Gets all variables used in the template as an array.
+Returns all variables as an array.
 
-**Returns:** `array<string, mixed>` - Array of variables
-
-**Example:**
 ```php
-$template = new MemoryTemplate('', ['name' => 'John', 'age' => 30]);
-$vars = $template->getVars(); // ['name' => 'John', 'age' => 30]
+$vars = $template->getVars();
+```
+
+---
+
+### Template Source Management
+
+#### `source(string $html): void`
+
+Set the template source content.
+
+```php
+$template->source('<h1>{{ title }}</h1>');
 ```
 
 ---
 
 #### `getSource(): string`
 
-Returns the source HTML/text of the template.
+Returns the template source content.
 
-**Returns:** `string` - Source HTML/text of the template
-
-**Example:**
 ```php
-$template = new MemoryTemplate('Hello, {{ name }}!');
-$source = $template->getSource(); // 'Hello, {{ name }}!'
+$source = $template->getSource();
+```
+
+---
+
+### Output
+
+#### `output(): string`
+
+Compile the template and return final HTML.
+
+```php
+$html = $template->output();
 ```
 
 ---
 
 #### `render(): void`
 
-Renders the template and echoes it.
+Compile the template and echo it.
 
-**Returns:** `void`
-
-**Example:**
 ```php
-$template = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
-$template->render(); // Output: "Hello, World!"
+$template->render();
 ```
 
 ---
 
-#### `output(): string`
+#### `__toString(): string`
 
-Returns the final processed HTML of the template.
+Returns `output()` when the object is echoed.
 
-**Returns:** `string` - Processed HTML
-
-**Example:**
 ```php
-$template = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
-$html = $template->output(); // "Hello, World!"
+echo $template;
 ```
 
 ---
 
-#### `protected compile(string $html): string`
+### Filter / Function Registration
 
-Processes template tags and produces final HTML.
+#### `addFilter(string $name, callable $callback): void`
 
-**Supported Syntax:**
-- `{{ key }}`
-- `{{key}}`
-- `{{   user.profile.email   }}`
+Add a custom filter. Used in templates as `{{ value|name }}`.
 
-If a variable is not found, the tag itself remains.
-
-**Parameters:**
-- `string $html` - Source HTML or text of the template
-
-**Returns:** `string` - Processed final HTML or text
-
-**Note:** Protected method - intended for internal use
+```php
+$template->addFilter('truncate', fn($v, int $len = 100) => mb_substr((string) $v, 0, $len));
+// {{ description|truncate(50) }}
+```
 
 ---
 
-#### `protected resolveValue(string $path): mixed|null`
+#### `addFunction(string $name, callable $callback): void`
 
-Resolves the value of a multi-level key (like user.profile.email).
+Add a custom function. Used in templates as `{{ name(args) }}`.
 
-**Example:** `"user.profile.email"` -> `$vars['user']['profile']['email']`
-
-**Parameters:**
-- `string $path` - Key path in "a.b.c" format (dot-separated)
-
-**Returns:** `mixed|null` - Found value or `null` (if not found)
-
-**Note:** Protected method - intended for internal use
-
----
-
-#### `protected stringify($content): string`
-
-Converts arrays or any type of data to text.
-
-If it's an array, all elements are concatenated sequentially. For other types, it performs a string cast.
-
-**Parameters:**
-- `mixed $content` - Data to convert
-
-**Returns:** `string` - Value converted to text format
-
-**Note:** Protected method - intended for internal use
+```php
+$template->addFunction('link', fn($route) => "/app/$route");
+// {{ link('home') }}
+```
 
 ---
 
 ## FileTemplate
 
-Extends `MemoryTemplate` to provide the ability to read and render templates from the file system.
+Extends MemoryTemplate to load templates from the file system. All engine logic lives in MemoryTemplate. FileTemplate only reads files and passes content to the engine.
 
 ### Class Signature
 
@@ -295,7 +207,7 @@ class FileTemplate extends MemoryTemplate
 ### Properties
 
 #### `protected string $_file`
-Full path of the template file to be rendered.
+Full path of the template file.
 
 ---
 
@@ -306,12 +218,9 @@ Full path of the template file to be rendered.
 FileTemplate constructor.
 
 **Parameters:**
-- `string $template` - Path to the template file (can be empty, set later using the `file()` method)
-- `array $vars` - Array of variables to pass to the template (optional, default: `[]`)
+- `string $template` - Path to the template file (can be empty)
+- `array $vars` - Variables array (default: `[]`)
 
-**Returns:** `void`
-
-**Example:**
 ```php
 $template = new FileTemplate(__DIR__ . '/template.html', ['name' => 'World']);
 ```
@@ -320,19 +229,11 @@ $template = new FileTemplate(__DIR__ . '/template.html', ['name' => 'World']);
 
 #### `file(string $filepath): void`
 
-Sets the path of the template file to use.
+Set the template file path.
 
-**Parameters:**
-- `string $filepath` - Path to the template file
+**Throws:** `\InvalidArgumentException` - If file name is empty
 
-**Returns:** `void`
-
-**Throws:**
-- `\InvalidArgumentException` - If the file name is empty
-
-**Example:**
 ```php
-$template = new FileTemplate();
 $template->file(__DIR__ . '/template.html');
 ```
 
@@ -340,359 +241,194 @@ $template->file(__DIR__ . '/template.html');
 
 #### `getFileName(): string`
 
-Returns the currently set template file path.
+Returns the template file path.
 
-**Returns:** `string` - File path
-
-**Example:**
 ```php
-$template = new FileTemplate(__DIR__ . '/template.html');
-$path = $template->getFileName(); // '/path/to/template.html'
+$path = $template->getFileName();
 ```
 
 ---
 
 #### `getFileSource(): string`
 
-Reads and returns the content of the template file.
+Reads and returns the file content.
 
-**Returns:** `string` - HTML/text content of the file
+**Throws:** `\RuntimeException` - If file not found or read error
 
-**Throws:**
-- `\RuntimeException` - If file is not specified, file doesn't exist, or error occurs when reading
-
-**Example:**
 ```php
-$template = new FileTemplate(__DIR__ . '/template.html');
-$content = $template->getFileSource(); // File content
+$content = $template->getFileSource();
 ```
 
 ---
 
 #### `output(): string`
 
-Reads the template file and returns final HTML using `MemoryTemplate`'s `compile()`.
+Reads the file and compiles it to final HTML.
 
-This method overrides `MemoryTemplate`'s `output()`, reads the file content, and passes it to `compile()`.
+**Throws:** `\RuntimeException` - If file read error
 
-**Returns:** `string` - Final processed HTML
-
-**Throws:**
-- `\RuntimeException` - If error occurs when reading file
-
-**Example:**
 ```php
-$template = new FileTemplate(__DIR__ . '/template.html', ['name' => 'World']);
-$html = $template->output(); // Processed HTML
+$html = $template->output();
 ```
 
 ---
 
 ### Inherited Methods
 
-`FileTemplate` inherits all public methods from `MemoryTemplate`:
+FileTemplate inherits all MemoryTemplate public methods:
 
-- `__toString(): string`
-- `source(string $html): void`
-- `has(string $key): bool`
-- `set(string $key, $value): void`
-- `setVars(array $values): void`
-- `get(string $key): mixed`
-- `getVars(): array<string, mixed>`
-- `getSource(): string`
-- `render(): void`
+- Variable management: `set`, `setVars`, `get`, `getVars`
+- Template source: `source`, `getSource`
+- Output: `render`, `__toString`
+- Filter/Function: `addFilter`, `addFunction`
 
 ---
 
-## TwigTemplate
+## Built-in Filters
 
-Extends `FileTemplate` to provide more powerful and flexible template processing using the Twig template engine.
+Automatically registered in the MemoryTemplate constructor:
 
-### Class Signature
+| Filter | Description | Example |
+|--------|-------------|---------|
+| `int` | Cast to integer | `{{ value\|int }}` |
+| `round` | Round number | `{{ price\|round(2) }}` |
+| `number_format` | Format number | `{{ price\|number_format(2, '.', ',') }}` |
+| `json_encode` | Encode to JSON | `{{ data\|json_encode }}` |
+| `upper` | Uppercase | `{{ name\|upper }}` |
+| `lower` | Lowercase | `{{ name\|lower }}` |
+| `capitalize` | Capitalize first letter | `{{ name\|capitalize }}` |
+| `nl2br` | Newlines to `<br>` | `{{ text\|nl2br }}` |
+| `url_encode` | URL encode | `{{ url\|url_encode }}` |
+| `raw` | No escaping | `{{ html\|raw }}` |
+| `e` / `escape` | HTML escape | `{{ input\|e }}` |
+| `date` | Format date | `{{ d\|date('Y-m-d') }}` |
+| `length` | Get length | `{{ items\|length }}` |
+| `keys` | Get array keys | `{{ data\|keys }}` |
+| `first` | First element | `{{ items\|first }}` |
+| `last` | Last element | `{{ items\|last }}` |
+| `slice` | Extract portion | `{{ text\|slice(0, 5) }}` |
+| `merge` | Merge arrays | `{{ arr\|merge([4, 5]) }}` |
+| `split` | Split string | `{{ csv\|split(',') }}` |
+| `default` | Default value | `{{ name\|default('Unknown') }}` |
+| `format` | sprintf | `{{ 'Hi %s'\|format(name) }}` |
+| `abs` | Absolute value | `{{ num\|abs }}` |
+| `trim` | Strip whitespace | `{{ text\|trim }}` |
+| `striptags` | Strip HTML tags | `{{ html\|striptags }}` |
+| `title` | Title Case | `{{ name\|title }}` |
+| `join` | Join array | `{{ items\|join(', ') }}` |
+| `reverse` | Reverse | `{{ items\|reverse }}` |
+| `sort` | Sort array | `{{ items\|sort }}` |
+| `unique` | Remove duplicates | `{{ items\|unique }}` |
+| `column` | Array column | `{{ users\|column('name') }}` |
+| `batch` | Chunk array | `{{ items\|batch(3) }}` |
+| `values` | Array values only | `{{ data\|values }}` |
+| `replace` | Replace text | `{{ text\|replace({'a': 'b'}) }}` |
+| `wordwrap` | Wrap lines | `{{ text\|wordwrap(80) }}` |
+| `json_decode` | Decode JSON | `{{ json\|json_decode }}` |
 
-```php
-class TwigTemplate extends FileTemplate
-```
+### Built-in Functions
 
-### Properties
-
-#### `protected Environment $_environment`
-TwigEnvironment object - contains the Twig engine with all configurations.
-
----
-
-### Methods
-
-#### `__construct(string $template = '', array $vars = [])`
-
-TwigTemplate constructor.
-
-**Parameters:**
-- `string $template` - Path to the template file
-- `array $vars` - Array of variables to pass to the template (optional, default: `[]`)
-
-**Returns:** `void`
-
-**Note:** Constructor creates Twig Environment with `autoescape=false` configuration. Also automatically adds `int` and `json_decode` filters.
-
-**Example:**
-```php
-$template = new TwigTemplate(__DIR__ . '/template.twig', ['name' => 'World']);
-```
-
----
-
-#### `getEnvironment(): Environment`
-
-Returns the Twig Environment object.
-
-**Returns:** `\Twig\Environment` - Twig Environment instance
-
-**Example:**
-```php
-$template = new TwigTemplate(__DIR__ . '/template.twig');
-$env = $template->getEnvironment();
-// Can work directly with Environment
-```
-
----
-
-#### `addGlobal(string $name, $value): void`
-
-Adds an external global variable to the template.
-
-**Parameters:**
-- `string $name` - Variable name
-- `mixed $value` - Variable value
-
-**Returns:** `void`
-
-**Example:**
-```php
-$template = new TwigTemplate(__DIR__ . '/template.twig');
-$template->addGlobal('app_name', 'MyApp');
-// Can use {{ app_name }} in template
-```
+| Function | Description | Example |
+|----------|-------------|---------|
+| `attribute` | Get array element | `{{ attribute(obj, key) }}` |
+| `range` | Number sequence | `{{ range(1, 10) }}` |
+| `max` | Maximum value | `{{ max(a, b) }}` |
+| `min` | Minimum value | `{{ min(a, b) }}` |
 
 ---
 
-#### `addFilter(TwigFilter $filter): void`
+## Supported Template Syntax
 
-Adds a custom filter to Twig.
+### Output
 
-**Parameters:**
-- `\Twig\TwigFilter $filter` - TwigFilter instance
+- `{{ variable }}` - Variable
+- `{{ variable|filter }}` - Filter chain
+- `{{ function(args) }}` - Function call
+- `{{ a ? b : c }}` - Ternary operator
+- `{{ a ?? b }}` - Null coalescing
+- `{{ a ~ b }}` - Concat operator
 
-**Returns:** `void`
+### Control Structures
 
-**Example:**
-```php
-use Twig\TwigFilter;
+- `{% if cond %}...{% elseif cond %}...{% else %}...{% endif %}`
+- `{% for item in items %}...{% endfor %}`
+- `{% for key, val in items %}...{% endfor %}`
+- `{% set name = value %}`
+- `{% macro name(params) %}...{% endmacro %}`
 
-$template = new TwigTemplate(__DIR__ . '/template.twig');
-$template->addFilter(new TwigFilter('uppercase', function ($string) {
-    return strtoupper($string);
-}));
-// Can use {{ value|uppercase }} in template
-```
+### Loop Variables
 
----
+Inside `{% for %}`, the `loop` object is available:
+- `loop.index` (starts from 1)
+- `loop.index0` (starts from 0)
+- `loop.first` (is this the first iteration?)
+- `loop.last` (is this the last iteration?)
+- `loop.length` (total count)
 
-#### `addFunction(TwigFunction $function): void`
+### Tests
 
-Adds a custom function to Twig.
+- `is defined`, `is empty`, `is null`, `is iterable`
+- `is not defined`, `is not empty`, etc.
 
-**Parameters:**
-- `\Twig\TwigFunction $function` - TwigFunction instance
+### Operators
 
-**Returns:** `void`
+- Comparison: `==`, `!=`, `<`, `>`, `<=`, `>=`
+- Logic: `and`, `or`, `not`
+- String: `starts with`
+- Arithmetic: `+`, `-`, `*`, `/`, `%`
 
-**Example:**
-```php
-use Twig\TwigFunction;
+### Literals
 
-$template = new TwigTemplate(__DIR__ . '/template.twig');
-$template->addFunction(new TwigFunction('greet', function ($name) {
-    return "Hello, $name!";
-}));
-// Can use {{ greet("World") }} in template
-```
+- String: `'hello'`, `"hello"`
+- Number: `42`, `3.14`
+- Boolean: `true`, `false`
+- Null: `null`, `none`
+- Array: `[1, 2, 3]`
+- Hash: `{'key': 'value'}`
 
----
+### Access
 
-#### `protected compile(string $html): string`
-
-Main compile function of TwigTemplate.
-
-FileTemplate -> reads file content, MemoryTemplate -> `compile()` is overridden and passed to Twig.
-
-This method creates a virtual template named "result" using ArrayLoader and processes it using Twig's `render()`.
-
-**Parameters:**
-- `string $html` - Source HTML of the template read from file
-
-**Returns:** `string` - Final HTML processed by Twig engine
-
-**Throws:**
-- `\Twig\Error\LoaderError` - If template loader error occurs
-- `\Twig\Error\RuntimeError` - If runtime error occurs
-- `\Twig\Error\SyntaxError` - If template syntax error occurs
-
-**Note:** Protected method - intended for internal use
-
----
-
-### Built-in Filters
-
-TwigTemplate automatically adds the following filters:
-
-#### `int`
-Converts to numeric value.
-
-**Example:**
-```twig
-{{ value|int }}
-```
-
-#### `json_decode`
-Converts JSON string to array or object.
-
-**Example:**
-```twig
-{{ json|json_decode }}
-```
-
----
-
-### Inherited Methods
-
-`TwigTemplate` inherits all public methods from `FileTemplate` and `MemoryTemplate`:
-
-- `file(string $filepath): void`
-- `getFileName(): string`
-- `getFileSource(): string`
-- `__toString(): string`
-- `source(string $html): void`
-- `has(string $key): bool`
-- `set(string $key, $value): void`
-- `setVars(array $values): void`
-- `get(string $key): mixed`
-- `getVars(): array<string, mixed>`
-- `getSource(): string`
-- `render(): void`
-- `output(): string`
+- Dot notation: `user.name`
+- Bracket notation: `user['name']`
+- Filter chain: `value|filter1|filter2(arg)`
 
 ---
 
 ## Examples
 
-### MemoryTemplate Example
+### MemoryTemplate -- full engine
 
 ```php
 use codesaur\Template\MemoryTemplate;
 
-// Simple variable
-$template = new MemoryTemplate('Hello, {{ name }}!', ['name' => 'World']);
-echo $template; // Output: "Hello, World!"
+$t = new MemoryTemplate(
+    '{% for item in items %}{{ loop.index }}. {{ item|upper }} {% endfor %}',
+    ['items' => ['php', 'js', 'go']]
+);
+echo $t; // 1. PHP 2. JS 3. GO
 
-// Multi-level variable
-$template = new MemoryTemplate('Email: {{ user.email }}', [
-    'user' => ['email' => 'test@example.com']
-]);
-echo $template; // Output: "Email: test@example.com"
+// Custom function
+$t = new MemoryTemplate('{{ greet("World") }}');
+$t->addFunction('greet', fn($name) => "Hello, $name!");
+echo $t; // Hello, World!
 
-// Add dynamic variables
-$template = new MemoryTemplate('{{ name }} is {{ age }} years old');
-$template->set('name', 'John');
-$template->set('age', 30);
-echo $template; // Output: "John is 30 years old"
+// Custom filter
+$t = new MemoryTemplate('{{ name|reverse }}', ['name' => 'hello']);
+$t->addFilter('reverse', fn($v) => strrev((string) $v));
+echo $t; // olleh
 ```
 
-### FileTemplate Example
+### FileTemplate
 
 ```php
 use codesaur\Template\FileTemplate;
 
-// Use file template
 $template = new FileTemplate(__DIR__ . '/page.html', [
-    'title' => 'Hello Codesaur',
-    'message' => 'This is file-based templating.'
+    'title' => 'My Page',
+    'users' => [['name' => 'John'], ['name' => 'Jane']]
 ]);
-
+$template->addFunction('link', fn($route, $params = []) => '/app/' . $route);
 echo $template->output();
-
-// Set file path later
-$template = new FileTemplate();
-$template->file(__DIR__ . '/page.html');
-$template->set('title', 'New Title');
-echo $template->output();
-```
-
-### TwigTemplate Example
-
-```php
-use codesaur\Template\TwigTemplate;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-
-// Simple Twig template
-$template = new TwigTemplate(__DIR__ . '/template.twig', [
-    'title' => 'Template Example',
-    'menu' => ['Home', 'About', 'Products'],
-    'items' => [
-        ['title' => 'Lightweight', 'text' => 'Fast template system.'],
-        ['title' => 'Flexible', 'text' => 'Supports various types of templates.']
-    ]
-]);
-
-$template->render();
-
-// Add custom filter
-$template->addFilter(new TwigFilter('uppercase', function ($string) {
-    return strtoupper($string);
-}));
-
-// Add custom function
-$template->addFunction(new TwigFunction('greet', function ($name) {
-    return "Hello, $name!";
-}));
-
-// Add global variable
-$template->addGlobal('app_name', 'MyApp');
-```
-
-### Template File Example (Twig)
-
-`template.twig`:
-```twig
-<!doctype html>
-<html>
-<head>
-    <title>{{ title }}</title>
-</head>
-<body>
-    <nav>
-        <ul>
-            {% for item in menu %}
-                <li>{{ item }}</li>
-            {% endfor %}
-        </ul>
-    </nav>
-    
-    <div class="container">
-        {% for box in items %}
-            <div class="card">
-                <h4>{{ box.title }}</h4>
-                <p>{{ box.text }}</p>
-            </div>
-        {% endfor %}
-    </div>
-    
-    <footer>
-        <small>&copy; {{ "now"|date("Y") }} {{ app_name }}</small>
-    </footer>
-</body>
-</html>
 ```
 
 ---
@@ -701,93 +437,19 @@ $template->addGlobal('app_name', 'MyApp');
 
 ### `\InvalidArgumentException`
 
-**Thrown by:**
 - `FileTemplate::file()` - If file name is empty
-
-**Example:**
-```php
-try {
-    $template = new FileTemplate();
-    $template->file(''); // Throws InvalidArgumentException
-} catch (\InvalidArgumentException $e) {
-    echo $e->getMessage();
-}
-```
 
 ### `\RuntimeException`
 
-**Thrown by:**
-- `FileTemplate::getFileSource()` - If file is not specified, file doesn't exist, or error occurs when reading
-- `FileTemplate::output()` - If error occurs when reading file
-
-**Example:**
-```php
-try {
-    $template = new FileTemplate('/nonexistent/file.html');
-    $template->output(); // Throws RuntimeException
-} catch (\RuntimeException $e) {
-    echo $e->getMessage();
-}
-```
-
-### `\Twig\Error\LoaderError`
-
-**Thrown by:**
-- `TwigTemplate::compile()` - If template loader error occurs
-
-### `\Twig\Error\RuntimeError`
-
-**Thrown by:**
-- `TwigTemplate::compile()` - If runtime error occurs
-
-### `\Twig\Error\SyntaxError`
-
-**Thrown by:**
-- `TwigTemplate::compile()` - If template syntax error occurs
-
-**Example:**
-```php
-try {
-    $template = new TwigTemplate(__DIR__ . '/invalid.twig');
-    $template->output(); // Throws SyntaxError if template has syntax errors
-} catch (\Twig\Error\SyntaxError $e) {
-    echo $e->getMessage();
-}
-```
-
----
-
-## Supported Template Syntax
-
-### MemoryTemplate / FileTemplate
-
-- `{{ key }}` - Simple variable
-- `{{key}}` - Variable without whitespace
-- `{{   key   }}` - Variable with whitespace
-- `{{ user.profile.email }}` - Multi-level variable
-
-### TwigTemplate
-
-TwigTemplate supports all Twig syntax:
-
-- Variables: `{{ variable }}`
-- Filters: `{{ variable|filter }}`
-- Functions: `{{ function() }}`
-- Control Structures: `{% if %}`, `{% for %}`, `{% block %}`, etc.
-- Comments: `{# comment #}`
-
-For more information, see [Twig Documentation](https://twig.symfony.com/doc/).
+- `FileTemplate::getFileSource()` - If file not found or read error
+- `FileTemplate::output()` - If file read error
 
 ---
 
 ## Best Practices
 
-1. **MemoryTemplate** - Use for small, simple templates
-2. **FileTemplate** - Use for file-based templates
-3. **TwigTemplate** - Use when complex templates, loops, conditions are needed
-
-4. **Exception handling** - Use try-catch when reading files and rendering templates
-5. **Variable validation** - Check if variable exists using `has()` method
-6. **Template caching** - Use template cache in production environment (for TwigTemplate)
-7. **Type hints** - Use type hints on all methods (PHP 8.2+)
-8. **PHPDoc** - Write detailed PHPDoc comments on all public methods
+1. **MemoryTemplate** - runs the full engine, sufficient for most use cases
+2. **FileTemplate** - use only when loading templates from the file system
+3. **Custom functions** - register value-producing logic (like `text()`, `link()`) as functions
+4. **Custom filters** - register value-transforming logic (like `|reverse`, `|truncate`) as filters
+5. **HTML comments** - use `<!-- comment -->` in templates (`{# #}` is not supported)

@@ -1,8 +1,9 @@
 {
     "name": "codesaur/template",
-    "description": "Энгийн текст-суурьтай темплейтээс эхлээд Twig-ээр бичсэн хүчирхэг темплейт хүртэл дэмждэг минимал, өргөтгөх боломжтой PHP template engine",
+    "description": "Бие даасан PHP template engine. Хөгжлийн явцад Twig-ийн синтаксаас санаа авч чадамжуудаа өргөжүүлсэн. Filters, functions, macros, expression parser бүхий хөнгөн, хурдан загварчлагч",
     "keywords": [
-        "template", "html", "mongol", "mongolia", "монгол", "codesaur", "narankhuu", "coden", "кодзавр", "наранхүү", "коден"
+        "template", "template-engine", "html", "php", "filters", "macros",
+        "mongol", "mongolia", "монгол", "codesaur", "narankhuu", "coden", "кодзавр", "наранхүү", "коден"
     ],
     "homepage": "https://github.com/codesaur-php",
     "authors": [
@@ -15,7 +16,7 @@
     "require": {
         "php": "^8.2.1",
         "ext-json": "*",
-        "twig/twig": "^3.22.2"
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0"
