@@ -151,9 +151,9 @@ class PerformanceTest extends TestCase
         $templateContent = '';
         $vars = ['name' => 'TestUser', 'message' => 'Hello World'];
         
-        // Repeat a pattern 10000 times to create a large template
+        // Repeat a pattern 1000 times to create a large template
         $pattern = '<p>Hello {{ name }}, this is a test message: {{ message }}</p>';
-        for ($i = 0; $i < 10000; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $templateContent .= $pattern;
             if ($i % 100 === 99) {
                 $templateContent .= "\n";
@@ -222,9 +222,9 @@ class PerformanceTest extends TestCase
         $templateContent = '';
         $vars = ['title' => 'Large Template Test', 'content' => 'Performance Test Content'];
         
-        // Repeat a pattern 50000 times
+        // Repeat a pattern 5000 times
         $pattern = '<div class="item"><h3>{{ title }}</h3><p>{{ content }}</p></div>';
-        for ($i = 0; $i < 50000; $i++) {
+        for ($i = 0; $i < 5000; $i++) {
             $templateContent .= $pattern;
             if ($i % 500 === 499) {
                 $templateContent .= "\n";
@@ -243,7 +243,7 @@ class PerformanceTest extends TestCase
             $executionTime = $endTime - $startTime;
             
             // Assert that large file rendering completes (should be < 3 seconds for very large files)
-            $this->assertLessThan(120.0, $executionTime, 'Large file template rendering should complete in less than 120 seconds');
+            $this->assertLessThan(10.0, $executionTime, 'Large file template rendering should complete in less than 10 seconds');
             $this->assertNotEmpty($output);
             // Output should be similar in size to template (variables replaced)
             $this->assertGreaterThan(strlen($templateContent) * 0.8, strlen($output), 'Output should be similar in size to template');

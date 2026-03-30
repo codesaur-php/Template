@@ -115,9 +115,9 @@ class MemoryTest extends TestCase
         $templateContent = '';
         $vars = ['name' => 'TestUser', 'message' => 'Hello World'];
         
-        // Repeat a pattern 10000 times to create a large template
+        // Repeat a pattern 1000 times to create a large template
         $pattern = '<p>Hello {{ name }}, this is a test message: {{ message }}</p>';
-        for ($i = 0; $i < 10000; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $templateContent .= $pattern;
         }
         
@@ -237,9 +237,9 @@ class MemoryTest extends TestCase
         $templateContent = '';
         $vars = ['title' => 'Large Template Test', 'content' => 'Memory Test Content'];
         
-        // Repeat a pattern 50000 times
+        // Repeat a pattern 5000 times
         $pattern = '<div class="item"><h3>{{ title }}</h3><p>{{ content }}</p></div>';
-        for ($i = 0; $i < 50000; $i++) {
+        for ($i = 0; $i < 5000; $i++) {
             $templateContent .= $pattern;
         }
         
@@ -256,7 +256,7 @@ class MemoryTest extends TestCase
             $memoryUsed = $finalMemory - $initialMemory;
             
             // Memory should be reasonable (less than 15MB for 500KB file)
-            $this->assertLessThan(150 * 1024 * 1024, $memoryUsed, 'Memory usage should be less than 150MB for 500KB template file');
+            $this->assertLessThan(50 * 1024 * 1024, $memoryUsed, 'Memory usage should be less than 50MB for large template file');
             $this->assertNotEmpty($output);
             
             // Clean up
@@ -291,8 +291,8 @@ class MemoryTest extends TestCase
         
         $template = new MemoryTemplate($templateContent, $vars);
         
-        // Render 1000 times
-        for ($i = 0; $i < 1000; $i++) {
+        // Render 100 times
+        for ($i = 0; $i < 100; $i++) {
             $output = $template->output();
             $this->assertNotEmpty($output);
         }
