@@ -352,6 +352,7 @@ Automatically registered in the MemoryTemplate constructor:
 
 - `{% if cond %}...{% elseif cond %}...{% else %}...{% endif %}`
 - `{% for item in items %}...{% endfor %}`
+- `{% for item in items %}...{% else %}...{% endfor %}` _(else branch renders when items is empty / not iterable)_
 - `{% for key, val in items %}...{% endfor %}`
 - `{% set name = value %}`
 - `{% macro name(params) %}...{% endmacro %}`
@@ -391,6 +392,8 @@ Inside `{% for %}`, the `loop` object is available:
 - Dot notation: `user.name`
 - Bracket notation: `user['name']`
 - Filter chain: `value|filter1|filter2(arg)`
+- Method call: `user.can('edit')`, `auth.is('admin')` _(invokes public methods on objects via `method_exists`)_
+- Callable map call: `helpers.upper('hi')` _(invokes a callable stored as an array element)_
 
 ---
 
@@ -416,6 +419,23 @@ echo $t; // Hello, World!
 $t = new MemoryTemplate('{{ name|reverse }}', ['name' => 'hello']);
 $t->addFilter('reverse', fn($v) => strrev((string) $v));
 echo $t; // olleh
+
+// for/else - else branch renders when collection is empty
+$t = new MemoryTemplate(
+    '{% for item in items %}{{ item }},{% else %}empty{% endfor %}',
+    ['items' => []]
+);
+echo $t; // empty
+
+// Object method call from expressions
+$user = new class {
+    public function can(string $perm): bool { return $perm === 'edit'; }
+};
+$t = new MemoryTemplate(
+    "{{ user.can('edit') ? 'yes' : 'no' }}|{{ user.can('admin') ? 'yes' : 'no' }}",
+    ['user' => $user]
+);
+echo $t; // yes|no
 ```
 
 ### FileTemplate

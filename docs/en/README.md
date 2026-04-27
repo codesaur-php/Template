@@ -209,8 +209,8 @@ vendor/bin/phpunit tests/MemoryTemplateTest.php
 
 ### Test Statistics
 
-- **Total Tests:** 100+ tests
-- **Assertions:** 1300+ assertions
+- **Total Tests:** 102 tests
+- **Assertions:** 374 assertions
 
 ---
 

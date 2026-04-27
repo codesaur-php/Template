@@ -219,4 +219,84 @@ TPL;
         $template = new FileTemplate($this->testTemplatePath, ['text' => 'Hello World']);
         $this->assertEquals('Hello', $template->output());
     }
+
+    public function testObjectMethodCall(): void
+    {
+        $user = new class {
+            public function can(string $permission): bool
+            {
+                return $permission === 'edit';
+            }
+            public function greet(string $name): string
+            {
+                return "Hello, $name!";
+            }
+        };
+
+        file_put_contents($this->testTemplatePath, "{{ user.can('edit') ? 'yes' : 'no' }}|{{ user.can('admin') ? 'yes' : 'no' }}|{{ user.greet('World') }}");
+        $template = new FileTemplate($this->testTemplatePath, ['user' => $user]);
+        $this->assertEquals('yes|no|Hello, World!', $template->output());
+    }
+
+    public function testObjectMethodCallInIfBlock(): void
+    {
+        $auth = new class {
+            public function is(string $role): bool
+            {
+                return $role === 'admin';
+            }
+        };
+
+        $content = "{% if auth.is('admin') %}ADMIN{% else %}USER{% endif %}";
+        file_put_contents($this->testTemplatePath, $content);
+        $template = new FileTemplate($this->testTemplatePath, ['auth' => $auth]);
+        $this->assertEquals('ADMIN', $template->output());
+    }
+
+    public function testArrayOfCallablesMethodCall(): void
+    {
+        $helpers = [
+            'upper' => fn(string $s) => strtoupper($s),
+            'double' => fn(int $n) => $n * 2,
+        ];
+
+        file_put_contents($this->testTemplatePath, "{{ helpers.upper('hi') }}|{{ helpers.double(21) }}");
+        $template = new FileTemplate($this->testTemplatePath, ['helpers' => $helpers]);
+        $this->assertEquals('HI|42', $template->output());
+    }
+
+    public function testMissingMethodReturnsNull(): void
+    {
+        $obj = new class {
+            public function exists(): string { return 'ok'; }
+        };
+
+        file_put_contents($this->testTemplatePath, "{{ obj.missing('x') ?? 'fallback' }}|{{ obj.exists() }}");
+        $template = new FileTemplate($this->testTemplatePath, ['obj' => $obj]);
+        $this->assertEquals('fallback|ok', $template->output());
+    }
+
+    public function testForElseWithItems(): void
+    {
+        $content = 'BEFORE|{% for i in items %}{{ i }},{% else %}empty{% endfor %}|AFTER';
+        file_put_contents($this->testTemplatePath, $content);
+        $template = new FileTemplate($this->testTemplatePath, ['items' => [1, 2, 3]]);
+        $this->assertEquals('BEFORE|1,2,3,|AFTER', $template->output());
+    }
+
+    public function testForElseWithEmptyItems(): void
+    {
+        $content = 'BEFORE|{% for i in items %}{{ i }},{% else %}empty{% endfor %}|AFTER';
+        file_put_contents($this->testTemplatePath, $content);
+        $template = new FileTemplate($this->testTemplatePath, ['items' => []]);
+        $this->assertEquals('BEFORE|empty|AFTER', $template->output());
+    }
+
+    public function testForElseWithNonIterable(): void
+    {
+        $content = '{% for i in items %}{{ i }}{% else %}nothing{% endfor %}';
+        file_put_contents($this->testTemplatePath, $content);
+        $template = new FileTemplate($this->testTemplatePath, ['items' => null]);
+        $this->assertEquals('nothing', $template->output());
+    }
 }

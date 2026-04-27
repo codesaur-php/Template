@@ -12,6 +12,7 @@ namespace codesaur\Template;
  * - Tests: is defined, is empty, is null, is iterable (+ is not вариант)
  * - Loop: loop.first, loop.last, loop.index, loop.index0, loop.length
  * - Macros: macro definition, _self recursive call, from/import
+ * - Method calls: object.method(args), array_of_callables.name(args)
  * - Literals: string, number, boolean, null, hash {}, array []
  * - Access: dot notation, bracket notation, filter chain
  * - Operators: starts with
@@ -390,11 +391,17 @@ class MemoryTemplate
         }
 
         $body = $this->buildTree($tokens, $i);
-        if ($i < \count($tokens) && $tokens[$i]['type'] === 'block' && $tokens[$i]['value'] === 'endfor') {
+        $elseBody = null;
+        $count = \count($tokens);
+        if ($i < $count && $tokens[$i]['type'] === 'block' && $tokens[$i]['value'] === 'else') {
+            $i++;
+            $elseBody = $this->buildTree($tokens, $i);
+        }
+        if ($i < $count && $tokens[$i]['type'] === 'block' && $tokens[$i]['value'] === 'endfor') {
             $i++;
         }
 
-        return ['type' => 'for', 'key' => $keyVar, 'val' => $valVar, 'iter' => $iter, 'body' => $body];
+        return ['type' => 'for', 'key' => $keyVar, 'val' => $valVar, 'iter' => $iter, 'body' => $body, 'else' => $elseBody];
     }
 
     private function buildMacro(string $header, array &$tokens, int &$i): array
@@ -446,12 +453,12 @@ class MemoryTemplate
     {
         $items = $this->expr($node['iter'], $ctx);
         if (!\is_iterable($items)) {
-            return '';
+            return !empty($node['else']) ? $this->renderNodes($node['else'], $ctx) : '';
         }
         $arr = \is_array($items) ? $items : \iterator_to_array($items);
         $total = \count($arr);
         if (!$total) {
-            return '';
+            return !empty($node['else']) ? $this->renderNodes($node['else'], $ctx) : '';
         }
 
         $save = [];
@@ -712,7 +719,15 @@ class MemoryTemplate
                 $this->ws($s, $p);
                 if ($p < $len && $s[$p] === '(') {
                     $args = $this->rArgs($s, $p, $ctx);
-                    $val = ($val === '__self__') ? $this->callMacro($prop, $args) : null;
+                    if ($val === '__self__') {
+                        $val = $this->callMacro($prop, $args);
+                    } elseif (\is_object($val) && \method_exists($val, $prop)) {
+                        $val = $val->$prop(...$args);
+                    } elseif (\is_array($val) && isset($val[$prop]) && \is_callable($val[$prop])) {
+                        $val = ($val[$prop])(...$args);
+                    } else {
+                        $val = null;
+                    }
                 } else {
                     if ($val === '__self__') {
                         $val = null;

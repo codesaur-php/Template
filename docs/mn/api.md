@@ -352,6 +352,7 @@ MemoryTemplate конструктор дотор автоматаар бүртг
 
 - `{% if cond %}...{% elseif cond %}...{% else %}...{% endif %}`
 - `{% for item in items %}...{% endfor %}`
+- `{% for item in items %}...{% else %}...{% endfor %}` _(items хоосон / iterable биш үед else хэсгийг render хийнэ)_
 - `{% for key, val in items %}...{% endfor %}`
 - `{% set name = value %}`
 - `{% macro name(params) %}...{% endmacro %}`
@@ -391,6 +392,8 @@ MemoryTemplate конструктор дотор автоматаар бүртг
 - Dot notation: `user.name`
 - Bracket notation: `user['name']`
 - Filter chain: `value|filter1|filter2(arg)`
+- Method дуудлага: `user.can('edit')`, `auth.is('admin')` _(`method_exists` шалгалттайгаар object-ийн public method дуудна)_
+- Callable map дуудлага: `helpers.upper('hi')` _(массивын callable элементийг шууд дуудна)_
 
 ---
 
@@ -416,6 +419,23 @@ echo $t; // Hello, World!
 $t = new MemoryTemplate('{{ name|reverse }}', ['name' => 'hello']);
 $t->addFilter('reverse', fn($v) => strrev((string) $v));
 echo $t; // olleh
+
+// for/else - items хоосон үед else хэсэг render хийгдэнэ
+$t = new MemoryTemplate(
+    '{% for item in items %}{{ item }},{% else %}empty{% endfor %}',
+    ['items' => []]
+);
+echo $t; // empty
+
+// Илэрхийлэлд object-ийн method дуудах
+$user = new class {
+    public function can(string $perm): bool { return $perm === 'edit'; }
+};
+$t = new MemoryTemplate(
+    "{{ user.can('edit') ? 'yes' : 'no' }}|{{ user.can('admin') ? 'yes' : 'no' }}",
+    ['user' => $user]
+);
+echo $t; // yes|no
 ```
 
 ### FileTemplate

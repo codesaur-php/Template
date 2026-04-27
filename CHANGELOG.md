@@ -7,35 +7,89 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.0.1] - 2026-04-27
+[4.0.1]: https://github.com/codesaur-php/Template/compare/v4.0.0...v4.0.1
+
+### Fixed
+
+#### `{% for %}{% else %}{% endfor %}` empty-iterable branch
+- **Bug:** Templates using the Twig-style `{% for %}{% else %}{% endfor %}`
+  construct silently dropped *everything* after the `{% endfor %}` from the
+  rendered output. The parser hit `{% else %}`, returned the loop body it had
+  collected so far, but never consumed the `else`/`endfor` tokens - so the
+  outer `buildTree` saw the orphan `else` as an end-marker and returned
+  immediately. Both the `else` branch and any content following the loop were
+  lost.
+- **Root cause:** `buildFor()` only looked for `{% endfor %}` and had no
+  knowledge of the `{% else %}` separator. The for-node had no `else` slot,
+  and `renderFor()` returned an empty string for non-iterable / empty
+  collections instead of falling back to the alternate branch.
+- **Fix:** `buildFor()` now optionally consumes an `{% else %}` block and
+  attaches its body as a new `else` key on the for-node. `renderFor()` renders
+  that else body when the iterable is missing, non-iterable, or empty -
+  matching Twig's documented behavior.
+
+#### Object method calls in expressions
+- **Bug:** Expressions like `{{ user.can('edit') }}` and `{% if auth.is('admin') %}`
+  silently returned `null`, causing permission-gated UI to be hidden even from
+  authorized users.
+- **Root cause:** The `pPostfix()` parser only handled the `_self.macroName(...)`
+  (macro invocation) case when it encountered a method call with arguments, and
+  silently set the result to `null` for all other cases - completely skipping
+  object and array-of-callables method dispatch.
+- **Fix:** `pPostfix()` now handles three distinct cases when a `.name(args)`
+  postfix is parsed:
+  - `_self.macro(...)` -> `callMacro` (unchanged)
+  - `object.method(...)` -> `$val->$method(...$args)` (guarded by `method_exists`)
+  - `array['callable'](...)` -> invokes the callable array element directly
+  - Otherwise -> `null` (unchanged)
+
+### Added
+
+#### Documentation
+- Added "Method calls" line to the `MemoryTemplate` class docblock describing the
+  newly supported `object.method(args)` and `array_of_callables.name(args)` forms.
+
+#### Tests
+- `testForElseWithItems` - `{% else %}` is skipped when the loop iterates
+- `testForElseWithEmptyItems` - `{% else %}` renders for empty arrays
+- `testForElseWithNonIterable` - `{% else %}` renders for null / non-iterable
+- `testObjectMethodCall` - calling public methods on an object from expressions
+- `testObjectMethodCallInIfBlock` - using a method call as an `{% if %}` condition
+- `testArrayOfCallablesMethodCall` - calling closures stored as array values
+- `testMissingMethodReturnsNull` - non-existent methods safely return `null`
+
+---
+
 ## [4.0.0] - 2026-03-30
 [4.0.0]: https://github.com/codesaur-php/Template/compare/v3.0.1...v4.0.0
 
 ### Changed
 
-#### Twig dependency-г бүрэн хассан
-- `twig/twig` package-г dependency-ээс бүрэн хассан
-- Хөгжлийн явцад Twig-ийн синтакс, дизайн загвараас санаа авч хэрэгтэй чадамжуудыг
-  өөрийн бие даасан engine болгон хэрэгжүүлсэн
-- ext-mbstring шаардлагад нэмсэн (capitalize, upper, lower, length гм.)
+#### Completely removed Twig dependency
+- Removed `twig/twig` package entirely from dependencies
+- During development, the necessary capabilities inspired by Twig's syntax and design patterns
+  were reimplemented as our own standalone engine
+- Added ext-mbstring to requirements (for capitalize, upper, lower, length, etc.)
 
-#### MemoryTemplate руу бүрэн engine шилжүүлсэн
-- Бүрэн template engine (tokenizer, parser, renderer, expression evaluator) FileTemplate-ээс
-  MemoryTemplate руу шилжсэн. Одоо MemoryTemplate нь if/for/set/macro, filter chain,
-  expression parser, ternary/null coalescing, loop variables бүгдийг дэмжинэ
-- FileTemplate нь зөвхөн файл уншиж MemoryTemplate-ийн engine-д дамжуулах
-  нимгэн wrapper болсон
+#### Migrated full engine into MemoryTemplate
+- The complete template engine (tokenizer, parser, renderer, expression evaluator) has been
+  moved from FileTemplate into MemoryTemplate. MemoryTemplate now supports if/for/set/macro,
+  filter chains, expression parser, ternary/null coalescing, and loop variables
+- FileTemplate is now a thin wrapper that only reads files and passes them to MemoryTemplate's
+  engine
 
-#### MemoryTemplate-д шинэ method-ууд нэмэгдсэн
-- `addFilter(string, callable)`, `addFunction(string, callable)` - custom filter/function бүртгэх
-- 33 built-in filter (e, date, length, keys, slice, json_encode, json_decode, abs, trim, striptags, title, join, reverse, sort, unique, column, batch, values, replace, wordwrap гм.)
-- Built-in function: `attribute`, `range`, `max`, `min`
+#### New methods added to MemoryTemplate
+- `addFilter(string, callable)`, `addFunction(string, callable)` - register custom filters/functions
+- 33 built-in filters (e, date, length, keys, slice, json_encode, json_decode, abs, trim, striptags, title, join, reverse, sort, unique, column, batch, values, replace, wordwrap, etc.)
+- Built-in functions: `attribute`, `range`, `max`, `min`
 
 ### Removed
-- **TwigTemplate** class устгасан (FileTemplate руу нэгтгэсэн)
-- `twig/twig` dependency (15+ файл, ~50,000 мөр код хасагдсан)
-- `addGlobal()`, `getEnvironment()` методууд (Twig-specific)
-- `{# comment #}` template comment синтакс
-- `stringify()` protected method устгасан - `(string)` cast-аар солигдсон
+- Removed the **TwigTemplate** class (merged into FileTemplate)
+- `twig/twig` dependency (15+ files, ~50,000 lines of code removed)
+- `addGlobal()`, `getEnvironment()` methods (Twig-specific)
+- `{# comment #}` template comment syntax
+- Removed the `stringify()` protected method - replaced with `(string)` cast
 
 ---
 
