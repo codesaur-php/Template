@@ -28,14 +28,14 @@ class MemoryTemplate
      *
      * @var string
      */
-    protected string $_html;
+    protected string $html;
 
     /**
      * Темплейтэд оруулах хувьсагчдын массив.
      *
      * @var array<string, mixed>
      */
-    protected array $_vars;
+    protected array $vars;
 
     /** @var array<string, callable> Бүртгэгдсэн filter-үүд */
     protected array $filters = [];
@@ -57,8 +57,8 @@ class MemoryTemplate
      */
     public function __construct(string $template = '', array $vars = [])
     {
-        $this->_html = $template;
-        $this->_vars = $vars;
+        $this->html = $template;
+        $this->vars = $vars;
 
         $this->registerBuiltins();
     }
@@ -81,7 +81,7 @@ class MemoryTemplate
      */
     public function source(string $html): void
     {
-        $this->_html = $html;
+        $this->html = $html;
     }
 
     /**
@@ -93,7 +93,7 @@ class MemoryTemplate
      */
     public function set(string $key, $value): void
     {
-        $this->_vars[$key] = $value;
+        $this->vars[$key] = $value;
     }
 
     /**
@@ -119,8 +119,8 @@ class MemoryTemplate
      */
     public final function &get(string $key)
     {
-        if (isset($this->_vars[$key])) {
-            return $this->_vars[$key];
+        if (isset($this->vars[$key])) {
+            return $this->vars[$key];
         }
 
         $nulldata = null;
@@ -134,7 +134,7 @@ class MemoryTemplate
      */
     public function getVars(): array
     {
-        return $this->_vars;
+        return $this->vars;
     }
 
     /**
@@ -144,7 +144,7 @@ class MemoryTemplate
      */
     public function getSource(): string
     {
-        return $this->_html;
+        return $this->html;
     }
 
     /**

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.0.2] - 2026-06-09
+[4.0.2]: https://github.com/codesaur-php/Template/compare/v4.0.1...v4.0.2
+
+### Changed
+
+- **Property names no longer use a leading underscore** (PSR-12 compliance)
+  - `MemoryTemplate`: `$_html` -> `$html`, `$_vars` -> `$vars`
+  - `FileTemplate`: `$_file` -> `$filepath`
+  - Internal only - all properties are `protected`, so the public API is unchanged.
+
+---
+
 ## [4.0.1] - 2026-04-27
 [4.0.1]: https://github.com/codesaur-php/Template/compare/v4.0.0...v4.0.1
 

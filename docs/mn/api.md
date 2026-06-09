@@ -43,10 +43,10 @@ class MemoryTemplate
 
 ### Properties
 
-#### `protected string $_html`
+#### `protected string $html`
 Темплейтийн үндсэн HTML эсвэл текст эх.
 
-#### `protected array<string, mixed> $_vars`
+#### `protected array<string, mixed> $vars`
 Темплейтэд оруулах хувьсагчдын массив.
 
 #### `protected array<string, callable> $filters`
@@ -206,7 +206,7 @@ class FileTemplate extends MemoryTemplate
 
 ### Properties
 
-#### `protected string $_file`
+#### `protected string $filepath`
 Темплейт файлын бүрэн зам.
 
 ---

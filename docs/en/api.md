@@ -43,10 +43,10 @@ class MemoryTemplate
 
 ### Properties
 
-#### `protected string $_html`
+#### `protected string $html`
 The main HTML or text source of the template.
 
-#### `protected array<string, mixed> $_vars`
+#### `protected array<string, mixed> $vars`
 Array of variables to be inserted into the template.
 
 #### `protected array<string, callable> $filters`
@@ -206,7 +206,7 @@ class FileTemplate extends MemoryTemplate
 
 ### Properties
 
-#### `protected string $_file`
+#### `protected string $filepath`
 Full path of the template file.
 
 ---

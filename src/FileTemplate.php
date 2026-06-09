@@ -12,7 +12,7 @@ namespace codesaur\Template;
 class FileTemplate extends MemoryTemplate
 {
     /** @var string Темплейт файлын зам */
-    protected string $_file = '';
+    protected string $filepath = '';
 
     /**
      * @param string $template Темплейт файлын зам (хоосон байж болно)
@@ -39,7 +39,7 @@ class FileTemplate extends MemoryTemplate
             throw new \InvalidArgumentException(__CLASS__ . ': Must provide filename');
         }
 
-        $this->_file = $filepath;
+        $this->filepath = $filepath;
     }
 
     /**
@@ -49,7 +49,7 @@ class FileTemplate extends MemoryTemplate
      */
     public function getFileName(): string
     {
-        return $this->_file;
+        return $this->filepath;
     }
 
     /**
