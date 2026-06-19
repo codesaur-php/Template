@@ -368,14 +368,15 @@ Inside `{% for %}`, the `loop` object is available:
 
 ### Tests
 
-- `is defined`, `is empty`, `is null`, `is iterable`
+- `is defined`, `is empty`, `is null`, `is iterable`, `is even`, `is odd`
 - `is not defined`, `is not empty`, etc.
 
 ### Operators
 
 - Comparison: `==`, `!=`, `<`, `>`, `<=`, `>=`
 - Logic: `and`, `or`, `not`
-- String: `starts with`
+- Membership: `in`, `not in` - `{% if type in ['image', 'video'] %}` (arrays, strings, Traversable)
+- String: `starts with`, `ends with`, `matches` (regex) - `{% if email matches '/^[^@]+@[^@]+$/' %}`
 - Arithmetic: `+`, `-`, `*`, `/`, `%`
 
 ### Literals

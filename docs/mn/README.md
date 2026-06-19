@@ -37,7 +37,7 @@ CI/CD статусыг [GitHub Actions](https://github.com/codesaur-php/Template
 - MemoryTemplate дээрээ бүрэн engine ажиллана. FileTemplate зөвхөн файл уншдаг wrapper
 - Framework-agnostic тул codesaur, Laravel, Symfony, Slim болон бусад бүх PHP framework-тэй нийцтэй
 - Бүрэн PHPDoc баримт бичиг
-- Unit, Integration, Performance болон Memory тестүүд (102 тест, 374 assertions)
+- Unit, Integration, Performance болон Memory тестүүд (108 тест, 385 assertions)
 
 ---
 
@@ -211,8 +211,8 @@ vendor/bin/phpunit tests/MemoryTemplateTest.php
 
 ### Test статистик
 
-- **Нийт тест:** 102 тест
-- **Assertions:** 374 assertions
+- **Нийт тест:** 108 тест
+- **Assertions:** 385 assertions
 
 ---
 

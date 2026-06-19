@@ -35,7 +35,7 @@ CI/CD status can be viewed on the [GitHub Actions](https://github.com/codesaur-p
 - MemoryTemplate runs the full engine. FileTemplate is just a file-reading wrapper
 - Framework-agnostic, fully compatible with codesaur, Laravel, Symfony, Slim and all other PHP frameworks
 - Complete PHPDoc documentation
-- Unit, Integration, Performance and Memory tests (95 tests, 1267 assertions)
+- Unit, Integration, Performance and Memory tests (108 tests, 385 assertions)
 
 ---
 
@@ -209,8 +209,8 @@ vendor/bin/phpunit tests/MemoryTemplateTest.php
 
 ### Test Statistics
 
-- **Total Tests:** 102 tests
-- **Assertions:** 374 assertions
+- **Total Tests:** 108 tests
+- **Assertions:** 385 assertions
 
 ---
 

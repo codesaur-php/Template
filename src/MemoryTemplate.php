@@ -8,14 +8,14 @@ namespace codesaur\Template;
  * Дэмжигдэх синтакс:
  * - Output: {{ expr }}, {{ expr|filter }}, {{ expr|filter(args) }}
  * - Tags: if/elseif/else/endif, for/endfor, set, macro/endmacro
- * - Operators: ==, !=, <, >, <=, >=, and, or, not, ~, ?:, ??
- * - Tests: is defined, is empty, is null, is iterable (+ is not вариант)
+ * - Operators: ==, !=, <, >, <=, >=, and, or, not, ~, ?:, ??, in, not in
+ * - Tests: is defined, is empty, is null, is iterable, is even, is odd (+ is not вариант)
  * - Loop: loop.first, loop.last, loop.index, loop.index0, loop.length
  * - Macros: macro definition, _self recursive call, from/import
  * - Method calls: object.method(args), array_of_callables.name(args)
  * - Literals: string, number, boolean, null, hash {}, array []
  * - Access: dot notation, bracket notation, filter chain
- * - Operators: starts with
+ * - String operators: starts with, ends with, matches (regex)
  *
  * @package codesaur\Template
  * @author Narankhuu
@@ -613,6 +613,8 @@ class MemoryTemplate
                 'null', 'none' => $left === null,
                 'defined'      => $left !== null,
                 'iterable'     => \is_iterable($left),
+                'even'         => \is_numeric($left) && ((int) $left) % 2 === 0,
+                'odd'          => \is_numeric($left) && ((int) $left) % 2 !== 0,
                 default        => false,
             };
             return $neg ? !$r : $r;
@@ -636,14 +638,60 @@ class MemoryTemplate
             }
         }
 
+        // Үг хэлбэрийн operator-ууд: starts with, ends with, in, not in, matches.
+        // Бүтэлгүйтсэн оролдлого бүрийн дараа $p-г сэргээж (backtrack) дараагийнхыг үзнэ.
         $sp = $p;
         if ($this->mWord($s, $p, 'starts') && $this->mWord($s, $p, 'with')) {
             $right = $this->pConcat($s, $p, $ctx);
             return \is_string($left) && \is_string($right) && \str_starts_with($left, $right);
         }
         $p = $sp;
+        if ($this->mWord($s, $p, 'ends') && $this->mWord($s, $p, 'with')) {
+            $right = $this->pConcat($s, $p, $ctx);
+            return \is_string($left) && \is_string($right) && \str_ends_with($left, $right);
+        }
+        $p = $sp;
+        if ($this->mWord($s, $p, 'in')) {
+            return $this->inOperator($left, $this->pConcat($s, $p, $ctx));
+        }
+        $p = $sp;
+        if ($this->mWord($s, $p, 'not') && $this->mWord($s, $p, 'in')) {
+            return !$this->inOperator($left, $this->pConcat($s, $p, $ctx));
+        }
+        $p = $sp;
+        if ($this->mWord($s, $p, 'matches')) {
+            $right = $this->pConcat($s, $p, $ctx);
+            return \is_string($left) && \is_string($right) && @\preg_match($right, $left) === 1;
+        }
+        $p = $sp;
 
         return $left;
+    }
+
+    /**
+     * Twig-ийн `in` membership operator-ийн логик.
+     *
+     * - Array: in_array (loose) - `1 in [1,2,3]`
+     * - String: str_contains (substring) - `'cd' in 'abcd'`
+     * - Traversable: array болгож шалгана
+     * - бусад: false
+     *
+     * @param mixed $needle
+     * @param mixed $haystack
+     * @return bool
+     */
+    private function inOperator(mixed $needle, mixed $haystack): bool
+    {
+        if (\is_string($haystack)) {
+            return \str_contains($haystack, (string) $needle);
+        }
+        if ($haystack instanceof \Traversable) {
+            $haystack = \iterator_to_array($haystack);
+        }
+        if (\is_array($haystack)) {
+            return \in_array($needle, $haystack);
+        }
+        return false;
     }
 
     private function pConcat(string $s, int &$p, array &$ctx): mixed

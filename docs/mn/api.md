@@ -368,14 +368,15 @@ MemoryTemplate конструктор дотор автоматаар бүртг
 
 ### Tests
 
-- `is defined`, `is empty`, `is null`, `is iterable`
+- `is defined`, `is empty`, `is null`, `is iterable`, `is even`, `is odd`
 - `is not defined`, `is not empty` гэх мэт
 
 ### Operators
 
 - Харьцуулах: `==`, `!=`, `<`, `>`, `<=`, `>=`
 - Логик: `and`, `or`, `not`
-- Тэмдэгт: `starts with`
+- Гишүүнчлэл: `in`, `not in` - `{% if type in ['image', 'video'] %}` (массив, тэмдэгт мөр, Traversable)
+- Тэмдэгт: `starts with`, `ends with`, `matches` (regex) - `{% if email matches '/^[^@]+@[^@]+$/' %}`
 - Тооцоолол: `+`, `-`, `*`, `/`, `%`
 
 ### Literals

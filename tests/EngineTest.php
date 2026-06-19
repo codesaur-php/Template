@@ -191,6 +191,53 @@ TPL;
         $this->assertEquals('link', $template->output());
     }
 
+    public function testEndsWithOperator(): void
+    {
+        $content = "{% if file ends with '.png' %}image{% else %}other{% endif %}";
+        file_put_contents($this->testTemplatePath, $content);
+        $this->assertEquals('image', (new FileTemplate($this->testTemplatePath, ['file' => 'logo.png']))->output());
+        $this->assertEquals('other', (new FileTemplate($this->testTemplatePath, ['file' => 'logo.gif']))->output());
+    }
+
+    public function testInOperatorArrayMembership(): void
+    {
+        $content = "{% if type in ['image', 'video', 'audio'] %}media{% else %}text{% endif %}";
+        file_put_contents($this->testTemplatePath, $content);
+        $this->assertEquals('media', (new FileTemplate($this->testTemplatePath, ['type' => 'video']))->output());
+        $this->assertEquals('text', (new FileTemplate($this->testTemplatePath, ['type' => 'pdf']))->output());
+    }
+
+    public function testInOperatorStringSubstring(): void
+    {
+        $content = "{% if 'cd' in word %}yes{% else %}no{% endif %}";
+        file_put_contents($this->testTemplatePath, $content);
+        $this->assertEquals('yes', (new FileTemplate($this->testTemplatePath, ['word' => 'abcde']))->output());
+        $this->assertEquals('no', (new FileTemplate($this->testTemplatePath, ['word' => 'abxyz']))->output());
+    }
+
+    public function testNotInOperator(): void
+    {
+        $content = "{% if status not in ['draft', 'archived'] %}live{% else %}hidden{% endif %}";
+        file_put_contents($this->testTemplatePath, $content);
+        $this->assertEquals('live', (new FileTemplate($this->testTemplatePath, ['status' => 'published']))->output());
+        $this->assertEquals('hidden', (new FileTemplate($this->testTemplatePath, ['status' => 'draft']))->output());
+    }
+
+    public function testMatchesOperator(): void
+    {
+        $content = "{% if email matches '/^[^@]+@[^@]+$/' %}valid{% else %}invalid{% endif %}";
+        file_put_contents($this->testTemplatePath, $content);
+        $this->assertEquals('valid', (new FileTemplate($this->testTemplatePath, ['email' => 'a@b.mn']))->output());
+        $this->assertEquals('invalid', (new FileTemplate($this->testTemplatePath, ['email' => 'not-an-email']))->output());
+    }
+
+    public function testIsEvenIsOddTests(): void
+    {
+        $content = "{% for i in [1, 2, 3, 4] %}{{ i }}{% if i is even %}E{% endif %}{% if i is odd %}O{% endif %}{% endfor %}";
+        file_put_contents($this->testTemplatePath, $content);
+        $this->assertEquals('1O2E3O4E', (new FileTemplate($this->testTemplatePath, []))->output());
+    }
+
     public function testConcatOperator(): void
     {
         file_put_contents($this->testTemplatePath, "{{ first ~ ' ' ~ last }}");

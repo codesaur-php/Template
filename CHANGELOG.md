@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.1.0] - 2026-06-19
+[4.1.0]: https://github.com/codesaur-php/Template/compare/v4.0.2...v4.1.0
+
+### Added
+
+- **More Twig-compatible operators in the expression parser** (`MemoryTemplate::pCompare()`):
+  - `in` / `not in` membership - `{% if type in ['image', 'video'] %}`. Works on arrays (`in_array`, loose), strings (`str_contains` substring), and `Traversable`.
+  - `ends with` string operator - complements the existing `starts with`.
+  - `matches` regex operator - `{% if email matches '/^[^@]+@[^@]+$/' %}` (uses `preg_match`, errors suppressed).
+  - `is even` / `is odd` number tests (also via `is not`) - e.g. alternating row styles in loops.
+  - Note: the `for ... in` loop is parsed at the tag level (`buildFor`), so the new `in` comparison operator does not conflict with it.
+
+---
+
 ## [4.0.2] - 2026-06-09
 [4.0.2]: https://github.com/codesaur-php/Template/compare/v4.0.1...v4.0.2
 

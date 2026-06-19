@@ -30,7 +30,7 @@ MemoryTemplate contains the complete template engine. FileTemplate is a thin wra
 
 ## Test Coverage Report
 
-**Test Results:** 102 tests, 374 assertions - **ALL PASSING**
+**Test Results:** 108 tests, 385 assertions - **ALL PASSING**
 
 **Test Types:**
 - Unit tests (MemoryTemplate, FileTemplate)
@@ -119,8 +119,8 @@ CI/CD status can be viewed on the [GitHub Actions](https://github.com/codesaur-p
 | Public Methods | 17 |
 | Built-in Filters | 33 |
 | Built-in Functions | 4 |
-| Test Cases | 95 |
-| Test Assertions | 1267 |
+| Test Cases | 108 |
+| Test Assertions | 385 |
 | CI/CD Pipeline | Active |
 | PHP Version Tested | 8.2 |
 
