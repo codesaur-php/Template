@@ -8,7 +8,7 @@ namespace codesaur\Template;
  * Дэмжигдэх синтакс:
  * - Output: {{ expr }}, {{ expr|filter }}, {{ expr|filter(args) }}
  * - Tags: if/elseif/else/endif, for/endfor, set, macro/endmacro
- * - Operators: ==, !=, <, >, <=, >=, and, or, not, ~, ?:, ??, in, not in
+ * - Operators: ==, !=, <, >, <=, >=, and, or, not, ~, ?:, ??, in, not in, unary minus
  * - Tests: is defined, is empty, is null, is iterable, is even, is odd (+ is not вариант)
  * - Loop: loop.first, loop.last, loop.index, loop.index0, loop.length
  * - Macros: macro definition, _self recursive call, from/import
@@ -540,6 +540,10 @@ class MemoryTemplate
         return $this->pTernary($s, $p, $ctx);
     }
 
+    // Нэг дамжлагатай (single-pass) parser тул салаалсан операторуудын
+    // хоёр тал заавал уншигдана (parser-ийн заагчийг урагшлуулахын тулд),
+    // харин үр дүнг нөхцөлөөр сонгоно. Хандалтууд null-safe тул аюулгүй.
+
     private function pTernary(string $s, int &$p, array &$ctx): mixed
     {
         $left = $this->pNullCoalesce($s, $p, $ctx);
@@ -550,14 +554,16 @@ class MemoryTemplate
             }
             if ($p + 1 < \strlen($s) && $s[$p + 1] === ':') {
                 $p += 2;
-                return $left ?: $this->pTernary($s, $p, $ctx);
+                $else = $this->pTernary($s, $p, $ctx);
+                return $left ?: $else;
             }
             $p++;
             $then = $this->pTernary($s, $p, $ctx);
             $this->ws($s, $p);
             if ($p < \strlen($s) && $s[$p] === ':') {
                 $p++;
-                return $left ? $then : $this->pTernary($s, $p, $ctx);
+                $else = $this->pTernary($s, $p, $ctx);
+                return $left ? $then : $else;
             }
             return $left ? $then : '';
         }
@@ -568,7 +574,8 @@ class MemoryTemplate
     {
         $left = $this->pOr($s, $p, $ctx);
         while ($this->mStr($s, $p, '??')) {
-            $left = $left ?? $this->pOr($s, $p, $ctx);
+            $right = $this->pOr($s, $p, $ctx);
+            $left = $left ?? $right;
         }
         return $left;
     }
@@ -577,7 +584,8 @@ class MemoryTemplate
     {
         $left = $this->pAnd($s, $p, $ctx);
         while ($this->mWord($s, $p, 'or')) {
-            $left = ((bool) $left) || ((bool) $this->pAnd($s, $p, $ctx));
+            $right = (bool) $this->pAnd($s, $p, $ctx);
+            $left = ((bool) $left) || $right;
         }
         return $left;
     }
@@ -586,7 +594,8 @@ class MemoryTemplate
     {
         $left = $this->pNot($s, $p, $ctx);
         while ($this->mWord($s, $p, 'and')) {
-            $left = ((bool) $left) && ((bool) $this->pNot($s, $p, $ctx));
+            $right = (bool) $this->pNot($s, $p, $ctx);
+            $left = ((bool) $left) && $right;
         }
         return $left;
     }
@@ -815,6 +824,13 @@ class MemoryTemplate
 
         if ($ch === "'" || $ch === '"') { return $this->rString($s, $p); }
         if (\ctype_digit($ch)) { return $this->rNumber($s, $p); }
+
+        // Unary minus: {{ -5 }}, {{ 3 * -2 }}, {{ -price }}
+        if ($ch === '-') {
+            $p++;
+            $val = $this->pPostfix($s, $p, $ctx);
+            return \is_numeric($val) ? -($val + 0) : 0;
+        }
 
         if ($ch === '(') {
             $p++;

@@ -313,4 +313,100 @@ class MemoryTemplateTest extends TestCase
         );
         $this->assertEquals('1:a,2:b,3:c', $template->output());
     }
+
+    // ==================== Parser pointer regression tests (v4.1.1) ====================
+
+    /**
+     * Хаалтан доторх ternary-ийн нөхцөл үнэн байхад else салбарын
+     * токенууд уншигдаж, хаалтын дараах илэрхийлэл үргэлжлэх ёстой.
+     */
+    public function testTernaryInsideParentheses(): void
+    {
+        $template = new MemoryTemplate("{{ (a ? 'x' : 'y') ~ '!' }}", ['a' => true]);
+        $this->assertEquals('x!', $template->output());
+
+        $template->set('a', false);
+        $this->assertEquals('y!', $template->output());
+    }
+
+    /**
+     * Elvis (?:) operator хаалтан дотор зүүн тал үнэн байхад
+     * баруун операнд уншигдаж parser гацахгүй байх тест.
+     */
+    public function testElvisInsideParentheses(): void
+    {
+        $template = new MemoryTemplate("{{ (a ?: 'y') ~ '!' }}", ['a' => 'x']);
+        $this->assertEquals('x!', $template->output());
+
+        $template->set('a', '');
+        $this->assertEquals('y!', $template->output());
+    }
+
+    /**
+     * Null coalescing (??) хаалтан дотор зүүн тал утгатай байхад
+     * баруун операнд уншигдаж parser гацахгүй байх тест.
+     */
+    public function testNullCoalescingInsideParentheses(): void
+    {
+        $template = new MemoryTemplate("{{ (a ?? 'y') ~ '!' }}", ['a' => 'x']);
+        $this->assertEquals('x!', $template->output());
+
+        $template = new MemoryTemplate("{{ (a ?? 'y') ~ '!' }}", []);
+        $this->assertEquals('y!', $template->output());
+    }
+
+    /**
+     * and/or операторуудын баруун тал short-circuit үед ч уншигдаж,
+     * хаалтын дараах илэрхийлэл зөв үргэлжлэх тест.
+     */
+    public function testLogicalOperatorsInsideParentheses(): void
+    {
+        $template = new MemoryTemplate(
+            '{% if (a and b) or c %}YES{% else %}NO{% endif %}',
+            ['a' => false, 'b' => true, 'c' => true]
+        );
+        $this->assertEquals('YES', $template->output());
+
+        $template = new MemoryTemplate(
+            '{% if (a or b) and c %}YES{% else %}NO{% endif %}',
+            ['a' => true, 'b' => false, 'c' => true]
+        );
+        $this->assertEquals('YES', $template->output());
+    }
+
+    /**
+     * or илэрхийллийн дараа ternary залгаж хэрэглэх тест.
+     */
+    public function testOrFollowedByTernary(): void
+    {
+        $template = new MemoryTemplate("{{ a or b ? 'Y' : 'N' }}", ['a' => true, 'b' => false]);
+        $this->assertEquals('Y', $template->output());
+    }
+
+    /**
+     * Функцийн аргумент дотор ternary ашиглах тест.
+     */
+    public function testTernaryInsideFunctionArguments(): void
+    {
+        $template = new MemoryTemplate('{{ max(a ? 1 : 2, 5) }}', ['a' => true]);
+        $this->assertEquals('5', $template->output());
+    }
+
+    /**
+     * Unary minus: сөрөг тоон литерал болон хувьсагчийн урвуу утга.
+     */
+    public function testUnaryMinus(): void
+    {
+        $template = new MemoryTemplate('{{ -5 }}', []);
+        $this->assertEquals('-5', $template->output());
+
+        $template = new MemoryTemplate('{{ 3 * -2 }}', []);
+        $this->assertEquals('-6', $template->output());
+
+        $template = new MemoryTemplate('{{ -price }}', ['price' => 7]);
+        $this->assertEquals('-7', $template->output());
+
+        $template = new MemoryTemplate('{{ -2 + 3 }}', []);
+        $this->assertEquals('1', $template->output());
+    }
 }

@@ -377,7 +377,7 @@ MemoryTemplate конструктор дотор автоматаар бүртг
 - Логик: `and`, `or`, `not`
 - Гишүүнчлэл: `in`, `not in` - `{% if type in ['image', 'video'] %}` (массив, тэмдэгт мөр, Traversable)
 - Тэмдэгт: `starts with`, `ends with`, `matches` (regex) - `{% if email matches '/^[^@]+@[^@]+$/' %}`
-- Тооцоолол: `+`, `-`, `*`, `/`, `%`
+- Тооцоолол: `+`, `-`, `*`, `/`, `%` болон unary minus (`-5`, `-price`)
 
 ### Literals
 

@@ -377,7 +377,7 @@ Inside `{% for %}`, the `loop` object is available:
 - Logic: `and`, `or`, `not`
 - Membership: `in`, `not in` - `{% if type in ['image', 'video'] %}` (arrays, strings, Traversable)
 - String: `starts with`, `ends with`, `matches` (regex) - `{% if email matches '/^[^@]+@[^@]+$/' %}`
-- Arithmetic: `+`, `-`, `*`, `/`, `%`
+- Arithmetic: `+`, `-`, `*`, `/`, `%` and unary minus (`-5`, `-price`)
 
 ### Literals
 

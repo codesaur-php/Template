@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.1.1] - 2026-07-04
+[4.1.1]: https://github.com/codesaur-php/Template/compare/v4.1.0...v4.1.1
+
+### Fixed
+
+#### Expression parser left tokens unconsumed on short-circuited branches
+- **Bug:** When the ternary (`? :`), elvis (`?:`), null coalescing (`??`), `and`,
+  and `or` operators short-circuited, the parser pointer was not advanced past
+  the skipped operand. Standalone expressions appeared to work (trailing text is
+  ignored), but inside parentheses, function arguments, or array literals the
+  leftover tokens corrupted parsing:
+  - `{{ (a ? 'x' : 'y') ~ '!' }}` rendered `x` instead of `x!`
+  - `{% if (a and b) or c %}` evaluated incorrectly (`c` was never reached)
+  - `{{ max(a ? 1 : 2, 5) }}` truncated the argument list and could raise a `TypeError`
+- **Fix:** Branching operators now always consume both operands and select the
+  result afterwards (`pTernary`, `pNullCoalesce`, `pOr`, `pAnd`). Note: operands
+  are therefore always *evaluated* as well - this is safe because all accessors
+  in the engine are null-safe and division is zero-guarded.
+
+#### Unary minus
+- **Bug:** Negative literals only worked by accident (`{{ -5 }}` parsed as
+  `null - 5`), and failed at higher precedence: `{{ 3 * -2 }}` returned `-2`
+  instead of `-6`.
+- **Fix:** `pPrimary()` now supports a proper unary minus for numeric operands
+  (`{{ -5 }}`, `{{ 3 * -2 }}`, `{{ -price }}`); non-numeric operands yield `0`.
+
+### Added
+
+#### Tests
+- `testTernaryInsideParentheses`, `testElvisInsideParentheses`,
+  `testNullCoalescingInsideParentheses`, `testLogicalOperatorsInsideParentheses`,
+  `testOrFollowedByTernary`, `testTernaryInsideFunctionArguments` - parser
+  pointer regression tests
+- `testUnaryMinus` - negative literals, unary minus with multiplication and variables
+
+### Changed
+
+- Removed the author's phone number from `composer.json`.
+
+---
+
 ## [4.1.0] - 2026-06-19
 [4.1.0]: https://github.com/codesaur-php/Template/compare/v4.0.2...v4.1.0
 
